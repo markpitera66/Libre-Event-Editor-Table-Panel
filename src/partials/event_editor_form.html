@@ -1,0 +1,79 @@
+<div class="modal-body" id="mmm-ddd-bbb">
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="fa fa-info-circle"></i>
+      <span class="p-l-1">Event Editor Form</span>
+    </h2>
+
+    <a class="modal-header-close" ng-click="dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <form class="form" name="event-editor-form" id="{{ model.timestamp }}">
+    <div class="modal-content" id="modal-modal-content" style="max-height:600px; overflow-y:scroll">
+      <div class="text-center">
+
+        <p style="margin: 0px 0px 10px 0px">Equipment:</p>
+        <div id="eet-datalist-equipment" class="eet-datalist">
+            <input class="eet-datalist-input" id="eet-datalist-input-equipment" type="text" name="equipment" placeholder="&#61442; Select An Equipment">
+            <i id="datalist-icon" class="icon iconfont icon-arrow eet-dl-i"></i>
+            <ul id="eet-datalist-ul-equipment" class="eet-datalist-ul"></ul>
+        </div>
+
+        <div class="custom-separator"></div>
+
+        <div class="category-div" id="category-div-id" style="margin-bottom: 15px">Categories</div>
+        <!-- Categories -->
+
+        <div class="target-being-below-categories" style="display:none"></div>
+      </div>
+      <!-- Categories -->
+
+      <div class="custom-separator target-being-above-reason-level-1"></div>
+
+      <!-- comment -->
+      <textarea
+        type="textarea"
+        rows="3"
+        style="margin-top: 30px; width: 100%; border: solid .1px lightgray; resize: none"
+        name="comment"
+        placeholder="Comment: (Maximun 250 Characters)"
+        maxlength="250"
+        id="editor-form-comment-area"
+      ></textarea>
+      <!-- comment -->
+
+      <div class="button-wrapper" style="text-align:center; margin-top:30px">
+        <button
+          id="event-editor-form-cancelBtn"
+          type="button"
+          class="btn btn-danger"
+          style="width:9rem"
+          ng-click="dismiss()"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="event-editor-form-splitBtn"
+          type="button"
+          class="btn btn-primary"
+          style="width:9rem"
+        >
+          Split
+        </button>
+
+        <button
+          id="event-editor-form-saveBtn"
+          type="button"
+          class="btn btn-success"
+          style="width:9rem"
+        >
+          Save
+        </button>
+      </div>
+      <input id="event-split-slider1" style="display: none" data-slider-id='ex1Slider1' type="text"/> 
+    </div>
+  </form>
+</div>
