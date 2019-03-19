@@ -1,4 +1,7 @@
-# Event Editor Table Panel -  Custom Plugin that enables users to split the event and assign equipment, category and reasons to the event.
+# Event Editor Table Panel 
+#### Custom Plugin that enables users to split the event and assign equipment, category and reasons to the event.
+
+------
 
 ### Influxdb Query example: 
 
