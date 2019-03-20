@@ -35,7 +35,7 @@ System.register(['app/core/core', './split_event_form', './utils', './instant_se
     var parentReason = reasons[0];
 
     var line = writeInfluxLine(category[0].value, parentReason, reason, comment, timestamp, equipment);
-    console.log(reason);
+    //   console.log(line);
 
     var url = utils.influxHost + 'write?db=smart_factory';
     utils.post(url, line).then(function (res) {

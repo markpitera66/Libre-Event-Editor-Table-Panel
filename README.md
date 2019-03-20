@@ -11,3 +11,6 @@ SELECT "Site", "Area", "Line", "status","duration", "execute", "held", "idle", "
 
 ### Data format
 Data MUST be formatted as a TABLE !
+
+### Time format
+Time format should be 'YYYY-MM-DD HH:mm:ss.SSS' to avoid unwanted results.

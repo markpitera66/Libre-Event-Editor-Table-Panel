@@ -33,7 +33,7 @@ function saveForm (data, timestamp) {
   const parentReason = reasons[0]
 
   const line = writeInfluxLine(category[0].value, parentReason, reason, comment, timestamp, equipment)
-  console.log(reason);
+//   console.log(line);
   
   let url = utils.influxHost + 'write?db=smart_factory'
   utils.post(url, line)
