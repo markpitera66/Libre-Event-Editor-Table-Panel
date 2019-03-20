@@ -1,5 +1,5 @@
 {
-  "name": "smart-factory-grafana-event-editor-table-panel",
+  "name": "smart-factory-event-editor-table-panel",
   "version": "1.0.0",
   "description": "Improved grafana table plugin",
   "main": "src/module.js",

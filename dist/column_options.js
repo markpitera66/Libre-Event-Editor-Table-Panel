@@ -18,7 +18,7 @@ System.register(['lodash', 'app/core/utils/kbn'], function (_export, _context) {
     return {
       restrict: 'E',
       scope: true,
-      templateUrl: 'public/plugins/event-editor-table-panel/partials/column_options.html',
+      templateUrl: 'public/plugins/smart-factory-event-editor-table-panel/partials/column_options.html',
       controller: ColumnOptionsCtrl
     };
   }

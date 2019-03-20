@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "Event Editor Table",
-  "id": "smart-factory-grafana-event-editor-table-panel",
+  "id": "smart-factory-event-editor-table-panel",
 
   "info": {
     "description": "Improved grafana table plugin",

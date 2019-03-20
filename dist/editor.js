@@ -18,7 +18,7 @@ System.register(['lodash', './transformers'], function (_export, _context) {
     return {
       restrict: 'E',
       scope: true,
-      templateUrl: 'public/plugins/event-editor-table-panel/partials/editor.html',
+      templateUrl: 'public/plugins/smart-factory-event-editor-table-panel/partials/editor.html',
       controller: TablePanelEditorCtrl
     };
   }

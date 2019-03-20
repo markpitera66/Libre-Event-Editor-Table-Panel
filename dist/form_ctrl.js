@@ -122,7 +122,7 @@ System.register(['app/core/core', './split_event_form', './utils', './instant_se
 
   function popUpModal(timestamp) {
     appEvents.emit('show-modal', {
-      src: 'public/plugins/event-editor-table-panel/partials/event_editor_form.html',
+      src: 'public/plugins/smart-factory-event-editor-table-panel/partials/event_editor_form.html',
       modalClass: 'confirm-modal event-editor-form-modal scroll',
       model: { timestamp: timestamp }
     });

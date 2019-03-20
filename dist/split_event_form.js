@@ -14,7 +14,7 @@ System.register(['app/core/core', './utils'], function (_export, _context) {
     dataInit(options, current, next);
 
     appEvents.emit('show-modal', {
-      src: 'public/plugins/event-editor-table-panel/partials/split_event_form.html',
+      src: 'public/plugins/smart-factory-event-editor-table-panel/partials/split_event_form.html',
       modalClass: 'confirm-modal event-split-form-modal',
       model: {}
     });
