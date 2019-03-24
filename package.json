@@ -2,6 +2,14 @@
   "name": "smart-factory-event-editor-table-panel",
   "version": "1.0.0",
   "description": "Improved grafana table plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Spruik/smart-factory-event-editor-table-panel"
+  },
+  "author": "Spruik Technologies",
+  "bugs": {
+    "url": "https://github.com/Spruik/smart-factory-event-editor-table-panel/issues"
+  },
   "main": "src/module.js",
   "scripts": {
     "lint": "eslint --color .",
