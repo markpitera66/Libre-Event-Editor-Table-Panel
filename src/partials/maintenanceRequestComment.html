@@ -1,0 +1,45 @@
+<div class="modal-body" id="" style="">
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="fa fa-info-circle"></i>
+      <span class="p-l-1">Maintenance Request Comment</span>
+    </h2>
+
+    <a class="modal-header-close" id="edit-maintenance-request-comment-close-btn" ng-click="dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <form class="form" name="event-maintenance-form" id="edit-maintenance-request-form">
+    <div
+      class="modal-content"
+      id="modal-modal-content"
+      style="max-height:600px; overflow-y:scroll"
+    >
+      <div class="text-center">
+
+        <!-- comment -->
+        <textarea
+          type="textarea"
+          rows="3"
+          style="margin-top: 30px; width: 100%; border: solid .1px lightgray; resize: none"
+          name="requestComment"
+          placeholder="Comment: (Maximun 250 Characters)"
+          maxlength="250"
+          id="edit-maintenance-request-text"
+        ></textarea>
+        <!-- comment -->
+
+        <button
+        id="event-editor-form-maintenance-request-sendBtn"
+        type="button"
+        class="btn btn-success"
+        style="width:9rem; margin-top: 5px"
+        >
+          Send
+        </button>
+
+      </div>
+    </div>
+  </form>
+</div>

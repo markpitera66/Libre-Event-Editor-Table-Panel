@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/core/core', './split_event_form', './utils', './instant_search_ctrl', './libs/bootstrap-slider'], function (_export, _context) {
+System.register(['app/core/core', './split_event_form', './utils', './camundaAPI', 'moment', './instant_search_ctrl', './libs/bootstrap-slider'], function (_export, _context) {
   "use strict";
 
-  var appEvents, showSplitForm, utils, enableInstantSearch, slider, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
+  var appEvents, showSplitForm, utils, camApi, moment, enableInstantSearch, slider, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
 
 
   function saveForm(data, timestamp) {
@@ -94,7 +94,7 @@ System.register(['app/core/core', './split_event_form', './utils', './instant_se
         equipmentRes = res;
       }).then(utils.get(postgresUrl).then(function (res) {
         categoryRes = res;
-        popUpModal(timestamp);
+        popUpOptionModal(timestamp);
       })).catch(function (e) {
         utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
         console.log(e);
@@ -108,17 +108,99 @@ System.register(['app/core/core', './split_event_form', './utils', './instant_se
     });
 
     // remove all listeners
-    removeListeners();
+    removeOptionListeners();
     // add listeners
-    addListeners(timestamp);
+    addOptionListeners(timestamp);
+  }
+
+  _export('showForm', showForm);
+
+  function popUpOptionModal() {
+    appEvents.emit('show-modal', {
+      src: 'public/plugins/smart-factory-event-editor-table-panel/partials/popup_options_form.html',
+      modalClass: 'editOrMaintenance-modal',
+      model: {}
+    });
+  }
+
+  function removeOptionListeners() {
+    $(document).off('click', 'input[type="radio"][name="edit-maintain-radio"]');
+  }
+
+  function addOptionListeners(timestamp) {
+
+    $(document).on('click', 'input[type="radio"][name="edit-maintain-radio"]', function (e) {
+
+      if (e.target.id === 'edit') {
+        //popup editor
+        popUpModal(timestamp);
+        // remove all listeners
+        removeListeners();
+        // add listeners
+        addListeners(timestamp);
+      } else if (e.target.id === 'maintain') {
+        //if no data, tell the user and open up the editor
+        if (!rowData.category) {
+          utils.alert('warning', 'Reason Codes Not Found', 'Please specify reason codes for this event before requesting maintenance');
+          //popup editor
+          popUpModal(timestamp);
+          // remove all listeners
+          removeListeners();
+          // add listeners
+          addListeners(timestamp);
+        } else {
+          //if there is data
+          var processedData = processData(rowData);
+          appEvents.emit('show-modal', {
+            src: 'public/plugins/smart-factory-event-editor-table-panel/partials/maintenanceRequestComment.html',
+            modalClass: 'confirm-modal',
+            model: {}
+          });
+          // remove all listeners
+          removeRequestListeners();
+          // add listeners
+          addRequestListeners(processedData);
+        }
+      }
+    });
+  }
+
+  function removeRequestListeners() {
+    $(document).off('click', 'button#event-editor-form-maintenance-request-sendBtn');
+  }
+
+  function addRequestListeners(processedData) {
+    $(document).on('click', 'button#event-editor-form-maintenance-request-sendBtn', function () {
+      var text = $('#edit-maintenance-request-text').val();
+      processedData.requestComment = text;
+      camApi.postMsg(processedData);
+      $('#edit-maintenance-request-comment-close-btn').trigger('click');
+    });
+  }
+
+  function processData(rowdata) {
+    var time = moment(rowdata.time).format('YYYY-MM-DD HH:mm:ss');
+    var equipment = rowdata.equipment || "Unknown | Unknown";
+    var comment = rowdata.comment || "";
+
+    return {
+      area: rowdata.Area,
+      site: rowdata.Site,
+      line: rowdata.Line,
+      category: rowdata.category,
+      duration: rowdata.duration.split('.')[0],
+      equipment: equipment.split(' | ')[1],
+      reason: rowdata.reason,
+      status: rowdata.status,
+      eventComment: comment,
+      time: time
+    };
   }
 
   /**
    * Popup the event editor form modal and pass the timestamp into the html as for the form_id
    * and then show categories
    */
-
-  _export('showForm', showForm);
 
   function popUpModal(timestamp) {
     appEvents.emit('show-modal', {
@@ -438,6 +520,10 @@ System.register(['app/core/core', './split_event_form', './utils', './instant_se
       showSplitForm = _split_event_form.showSplitForm;
     }, function (_utils) {
       utils = _utils;
+    }, function (_camundaAPI) {
+      camApi = _camundaAPI;
+    }, function (_moment) {
+      moment = _moment.default;
     }, function (_instant_search_ctrl) {
       enableInstantSearch = _instant_search_ctrl.enableInstantSearch;
     }, function (_libsBootstrapSlider) {

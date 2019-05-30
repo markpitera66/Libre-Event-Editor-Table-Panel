@@ -135,7 +135,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       _export('TableCtrl', TableCtrl = function (_MetricsPanelCtrl) {
         _inherits(TableCtrl, _MetricsPanelCtrl);
 
-        function TableCtrl($scope, $injector, templateSrv, annotationsSrv, $sanitize, variableSrv) {
+        function TableCtrl($scope, $injector, templateSrv, annotationsSrv, $sanitize, variableSrv, $sce) {
           _classCallCheck(this, TableCtrl);
 
           var _this = _possibleConstructorReturn(this, (TableCtrl.__proto__ || Object.getPrototypeOf(TableCtrl)).call(this, $scope, $injector));
@@ -156,6 +156,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           _this.events.on('data-snapshot-load', _this.onDataReceived.bind(_this));
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
           _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_this));
+
+          _this.panel.camundaUrl = $sce.trustAsResourceUrl(utils.camundaHost);
 
           $(document).off('click', 'tr.tr-affect#event-editor-table-tr-id');
           //Show form if a row is clicked

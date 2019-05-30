@@ -252,4 +252,8 @@ For Radio Btns
   /* #ex1Slider .slider-selection {
 	background: #4cd964;
   } */
+
+.editOrMaintenance-modal{
+  max-width: 300px !important;
+}
   

@@ -1,10 +1,10 @@
 import { appEvents } from 'app/core/core'
 import { showSplitForm } from './split_event_form'
 import * as utils from './utils'
+import * as camApi from './camundaAPI'
+import moment from 'moment'
 import { enableInstantSearch } from './instant_search_ctrl'
 import slider from './libs/bootstrap-slider'
-
-
 
 let categoryRes
 let equipmentRes
@@ -98,7 +98,7 @@ export function showForm (timestamp) {
         }).then(utils.get(postgresUrl)
             .then(res => {
                 categoryRes = res
-                popUpModal(timestamp)
+                popUpOptionModal(timestamp)
             })
           ).catch(e => {
             utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
@@ -115,9 +115,91 @@ export function showForm (timestamp) {
     })
 
   // remove all listeners
-  removeListeners()
+  removeOptionListeners()
   // add listeners
-  addListeners(timestamp)
+  addOptionListeners(timestamp)
+}
+
+function popUpOptionModal () {
+  appEvents.emit('show-modal', {
+    src: 'public/plugins/smart-factory-event-editor-table-panel/partials/popup_options_form.html',
+    modalClass: 'editOrMaintenance-modal',
+    model: {}
+  })
+}
+
+function removeOptionListeners() {
+  $(document).off('click', 'input[type="radio"][name="edit-maintain-radio"]')
+}
+
+function addOptionListeners(timestamp) {
+
+  $(document).on('click', 'input[type="radio"][name="edit-maintain-radio"]', e => {
+    
+    if (e.target.id === 'edit') {
+      //popup editor
+      popUpModal(timestamp)
+      // remove all listeners
+      removeListeners()
+      // add listeners
+      addListeners(timestamp)
+    }else if (e.target.id === 'maintain') {
+      //if no data, tell the user and open up the editor
+      if (!rowData.category) {
+        utils.alert('warning', 'Reason Codes Not Found', 'Please specify reason codes for this event before requesting maintenance')
+        //popup editor
+        popUpModal(timestamp)
+        // remove all listeners
+        removeListeners()
+        // add listeners
+        addListeners(timestamp)
+      }else {
+        //if there is data
+        const processedData = processData(rowData)
+        appEvents.emit('show-modal', {
+          src: 'public/plugins/smart-factory-event-editor-table-panel/partials/maintenanceRequestComment.html',
+          modalClass: 'confirm-modal',
+          model: {}
+        })
+        // remove all listeners
+        removeRequestListeners()
+        // add listeners
+        addRequestListeners(processedData)
+      }
+    }
+  })
+}
+
+function removeRequestListeners() {
+  $(document).off('click', 'button#event-editor-form-maintenance-request-sendBtn')
+}
+
+function addRequestListeners(processedData) {
+  $(document).on('click', 'button#event-editor-form-maintenance-request-sendBtn', function (){
+    const text = $('#edit-maintenance-request-text').val()
+    processedData.requestComment = text
+    camApi.postMsg(processedData)
+    $('#edit-maintenance-request-comment-close-btn').trigger('click')
+  })
+}
+
+function processData (rowdata) {
+  const time = moment(rowdata.time).format('YYYY-MM-DD HH:mm:ss')
+  const equipment = rowdata.equipment || "Unknown | Unknown"
+  const comment = rowdata.comment || ""
+
+  return {
+    area: rowdata.Area,
+    site: rowdata.Site,
+    line: rowdata.Line,
+    category: rowdata.category,
+    duration: rowdata.duration.split('.')[0],
+    equipment: equipment.split(' | ')[1],
+    reason: rowdata.reason,
+    status: rowdata.status,
+    eventComment: comment,
+    time: time
+  }
 }
 
 /**

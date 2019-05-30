@@ -1,8 +1,16 @@
 import { appEvents } from 'app/core/core'
 
 const hostname = window.location.hostname
-const postgRestHost = 'http://' + hostname + ':5436/'
-const influxHost = 'http://' + hostname + ':8086/'
+const http = "http://"
+const postgRestHost = http + hostname + ':5436/'
+const influxHost = http + hostname + ':8086/'
+
+let tasklistHostName = hostname
+if (tasklistHostName === 'localhost') {
+  tasklistHostName = '127.0.0.1'
+}
+export const camundaHost = http + tasklistHostName + ':8080/camunda/app/tasklist'
+export const camundaRestApi = http + hostname + ':8080/engine-rest/'
 
 const get = url => {
   return new Promise((resolve, reject) => {
@@ -54,6 +62,5 @@ const post = (url, line) => {
 const alert = (type, title, msg) => {
   appEvents.emit('alert-' + type, [title, msg])
 }
-
 
 export { get, post, influxHost, postgRestHost, alert}

@@ -49,7 +49,7 @@ const panelDefaults = {
 
 export class TableCtrl extends MetricsPanelCtrl {
 
-  constructor($scope, $injector, templateSrv, annotationsSrv, $sanitize, variableSrv) {
+  constructor($scope, $injector, templateSrv, annotationsSrv, $sanitize, variableSrv, $sce) {
     super($scope, $injector);
 
     this.pageIndex = 0;
@@ -68,6 +68,8 @@ export class TableCtrl extends MetricsPanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+
+    this.panel.camundaUrl = $sce.trustAsResourceUrl(utils.camundaHost)
 
     $(document).off('click', 'tr.tr-affect#event-editor-table-tr-id')
     //Show form if a row is clicked
