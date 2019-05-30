@@ -181,6 +181,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
   function processData(rowdata) {
     var time = moment(rowdata.time).format('YYYY-MM-DD HH:mm:ss');
     var equipment = rowdata.equipment || "Unknown | Unknown";
+    var reason = rowdata.reason || "Unknown";
     var comment = rowdata.comment || "";
 
     return {
@@ -190,7 +191,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
       category: rowdata.category,
       duration: rowdata.duration.split('.')[0],
       equipment: equipment.split(' | ')[1],
-      reason: rowdata.reason,
+      reason: reason,
       status: rowdata.status,
       eventComment: comment,
       time: time

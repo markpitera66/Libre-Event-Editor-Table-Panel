@@ -186,6 +186,7 @@ function addRequestListeners(processedData) {
 function processData (rowdata) {
   const time = moment(rowdata.time).format('YYYY-MM-DD HH:mm:ss')
   const equipment = rowdata.equipment || "Unknown | Unknown"
+  const reason = rowdata.reason || "Unknown"
   const comment = rowdata.comment || ""
 
   return {
@@ -195,7 +196,7 @@ function processData (rowdata) {
     category: rowdata.category,
     duration: rowdata.duration.split('.')[0],
     equipment: equipment.split(' | ')[1],
-    reason: rowdata.reason,
+    reason: reason,
     status: rowdata.status,
     eventComment: comment,
     time: time
