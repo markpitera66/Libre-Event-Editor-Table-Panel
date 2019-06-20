@@ -1,5 +1,6 @@
 import { appEvents } from 'app/core/core'
 import * as utils from './utils'
+import { refreshPanel } from './table_ctrl'
 
 let currentRecord = {}
 let nextRecord = {}
@@ -198,6 +199,7 @@ function splitFormSubmitListener () {
             // console.log(res)
             $('#event-split-form-cancelBtn').trigger('click')
             utils.alert('success', 'Success', 'Event successfully splitted')
+            refreshPanel()
           })
           .catch(e => {
             console.log(e)

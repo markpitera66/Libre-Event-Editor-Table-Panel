@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/core/core', './split_event_form', './utils', './camundaAPI', 'moment', './instant_search_ctrl', './libs/bootstrap-slider'], function (_export, _context) {
+System.register(['app/core/core', './split_event_form', './utils', './camundaAPI', 'moment', './instant_search_ctrl', './libs/bootstrap-slider', './table_ctrl'], function (_export, _context) {
   "use strict";
 
-  var appEvents, showSplitForm, utils, camApi, moment, enableInstantSearch, slider, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
+  var appEvents, showSplitForm, utils, camApi, moment, enableInstantSearch, slider, refreshPanel, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
 
 
   function saveForm(data, timestamp) {
@@ -42,10 +42,11 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
       //   console.log(res)
       //save success. close the form
       $('#event-editor-form-cancelBtn').trigger('click');
-      utils.alert('success', 'Success', 'database successfully updated');
+      utils.alert('success', 'Success', 'form saved');
+      refreshPanel();
     }).catch(function (e) {
       console.log(e);
-      utils.alert('error', 'Error', 'Unexpected error occurred whiling updating the influx database, please try again');
+      utils.alert('error', 'Error', 'Unexpected error occurred whiling saving the form due to \'' + e + '\', please try again');
     });
   }
 
@@ -529,6 +530,8 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
       enableInstantSearch = _instant_search_ctrl.enableInstantSearch;
     }, function (_libsBootstrapSlider) {
       slider = _libsBootstrapSlider.default;
+    }, function (_table_ctrl) {
+      refreshPanel = _table_ctrl.refreshPanel;
     }],
     execute: function () {
       categoryRes = void 0;

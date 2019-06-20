@@ -15,6 +15,7 @@ import './css/bootstrap-slider.css!';
 import './css/instant-search.css!';
 
 let timestamp
+let _ctrl
 
 const panelDefaults = {
   targets: [{}],
@@ -53,6 +54,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
 
     this.pageIndex = 0;
+    _ctrl = this
 
     if (this.panel.styles === void 0) {
       this.panel.styles = this.panel.columns;
@@ -132,7 +134,6 @@ export class TableCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     if (dataList.length !== 0) {
-      
       this.handle(dataList[0])
     }
 
@@ -504,6 +505,10 @@ export class TableCtrl extends MetricsPanelCtrl {
     });
   }
 
+}
+
+export const refreshPanel = () => {
+  _ctrl.refresh()
 }
 
 TableCtrl.templateUrl = './partials/module.html';

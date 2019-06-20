@@ -3,7 +3,7 @@
 System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'app/plugins/sdk', './transformers', './form_ctrl', './utils', './editor', './column_options', './renderer', './css/style.css!', './css/bootstrap-slider.css!', './css/instant-search.css!'], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, showForm, utils, tablePanelEditor, columnOptionsTab, TableRenderer, _createClass, _get, timestamp, panelDefaults, TableCtrl;
+  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, showForm, utils, tablePanelEditor, columnOptionsTab, TableRenderer, _createClass, _get, timestamp, _ctrl, panelDefaults, TableCtrl, refreshPanel;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -104,6 +104,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       };
 
       timestamp = void 0;
+      _ctrl = void 0;
       panelDefaults = {
         targets: [{}],
         transform: 'timeseries_to_columns',
@@ -141,6 +142,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           var _this = _possibleConstructorReturn(this, (TableCtrl.__proto__ || Object.getPrototypeOf(TableCtrl)).call(this, $scope, $injector));
 
           _this.pageIndex = 0;
+          _ctrl = _this;
 
           if (_this.panel.styles === void 0) {
             _this.panel.styles = _this.panel.columns;
@@ -224,7 +226,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           key: 'onDataReceived',
           value: function onDataReceived(dataList) {
             if (dataList.length !== 0) {
-
               this.handle(dataList[0]);
             }
 
@@ -610,6 +611,12 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       }(MetricsPanelCtrl));
 
       _export('TableCtrl', TableCtrl);
+
+      _export('refreshPanel', refreshPanel = function refreshPanel() {
+        _ctrl.refresh();
+      });
+
+      _export('refreshPanel', refreshPanel);
 
       TableCtrl.templateUrl = './partials/module.html';
     }

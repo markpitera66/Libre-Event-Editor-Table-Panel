@@ -5,6 +5,7 @@ import * as camApi from './camundaAPI'
 import moment from 'moment'
 import { enableInstantSearch } from './instant_search_ctrl'
 import slider from './libs/bootstrap-slider'
+import { refreshPanel } from './table_ctrl'
 
 let categoryRes
 let equipmentRes
@@ -41,11 +42,12 @@ function saveForm (data, timestamp) {
     //   console.log(res)
       //save success. close the form
       $('#event-editor-form-cancelBtn').trigger('click')
-      utils.alert('success', 'Success', 'database successfully updated')
+      utils.alert('success', 'Success', 'form saved')
+      refreshPanel()
     })
     .catch(e => {
       console.log(e)
-      utils.alert('error', 'Error', 'Unexpected error occurred whiling updating the influx database, please try again')
+      utils.alert('error', 'Error', `Unexpected error occurred whiling saving the form due to '${e}', please try again`)
     })
 }
 

@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/core/core', './utils'], function (_export, _context) {
+System.register(['app/core/core', './utils', './table_ctrl'], function (_export, _context) {
   "use strict";
 
-  var appEvents, utils, currentRecord, nextRecord, min, max, reasonsStr, categoryStr, equipmentStr, isTimeEditing, isSplittingLeft, retryTimes;
+  var appEvents, utils, refreshPanel, currentRecord, nextRecord, min, max, reasonsStr, categoryStr, equipmentStr, isTimeEditing, isSplittingLeft, retryTimes;
 
   /**
    * Show the split form with @param [array] options , which is an arr with category and reasons chosen in the editor form
@@ -188,6 +188,7 @@ System.register(['app/core/core', './utils'], function (_export, _context) {
         // console.log(res)
         $('#event-split-form-cancelBtn').trigger('click');
         utils.alert('success', 'Success', 'Event successfully splitted');
+        refreshPanel();
       }).catch(function (e) {
         console.log(e);
         $('#event-split-form-cancelBtn').trigger('click');
@@ -426,6 +427,8 @@ System.register(['app/core/core', './utils'], function (_export, _context) {
       appEvents = _appCoreCore.appEvents;
     }, function (_utils) {
       utils = _utils;
+    }, function (_table_ctrl) {
+      refreshPanel = _table_ctrl.refreshPanel;
     }],
     execute: function () {
       currentRecord = {};
