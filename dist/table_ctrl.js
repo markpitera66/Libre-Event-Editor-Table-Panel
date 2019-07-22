@@ -175,9 +175,15 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               }
             });
 
-            var date = rawData[0];
-            timestamp = moment(date).valueOf() * 1000000;
-            showForm(timestamp);
+            var timeIndex = $scope.ctrl.colDimensions.indexOf("Time");
+            if (!~timeIndex) {
+              utils.alert('error', 'Error', 'Get not get this event from the database because TIME NOT FOUND, please contact the dev team, or try to NOT hide the time column');
+              return;
+            } else {
+              var date = rawData[0];
+              timestamp = moment(date).valueOf() * 1000000;
+              showForm(timestamp);
+            }
           });
 
           _this.errorLogged = false;
@@ -569,6 +575,15 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               appendPaginationControls(footerElem);
 
               rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
+
+              // get current table column dimensions 
+              if (ctrl.table.columns) {
+                ctrl.colDimensions = ctrl.table.columns.filter(function (x) {
+                  return !x.hidden;
+                }).map(function (x) {
+                  return x.text;
+                });
+              }
             }
 
             // hook up link tooltips

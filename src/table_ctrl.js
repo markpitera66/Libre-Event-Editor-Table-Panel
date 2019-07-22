@@ -88,9 +88,15 @@ export class TableCtrl extends MetricsPanelCtrl {
 
       })
 
-      let date = rawData[0]
-      timestamp = moment(date).valueOf() * 1000000
-      showForm(timestamp)
+      const timeIndex = $scope.ctrl.colDimensions.indexOf("Time")
+      if (!~timeIndex) {
+        utils.alert('error', 'Error', 'Get not get this event from the database because TIME NOT FOUND, please contact the dev team, or try to NOT hide the time column')
+        return
+      }else {
+        let date = rawData[0]
+        timestamp = moment(date).valueOf() * 1000000
+        showForm(timestamp)     
+      }
     })
 
     this.errorLogged = false
@@ -468,6 +474,11 @@ export class TableCtrl extends MetricsPanelCtrl {
       appendPaginationControls(footerElem);
 
       rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
+
+      // get current table column dimensions 
+      if (ctrl.table.columns) {
+        ctrl.colDimensions = ctrl.table.columns.filter(x => !x.hidden).map(x => x.text)
+      }
     }
 
     // hook up link tooltips
