@@ -87,7 +87,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
   function showForm(timestamp) {
     //console.log(timestamp)
     var influxUrl = utils.influxHost + 'query?pretty=true&db=smart_factory&q=select * from Availability where time >= ' + timestamp + ' limit 2';
-    var postgresUrl = utils.postgRestHost + 'reason_codes';
+    var postgresUrl = utils.postgRestHost + 'reason_code';
 
     // send query requests
     utils.get(influxUrl).then(handleData).then(function (url) {

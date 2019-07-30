@@ -88,7 +88,7 @@ function writeInfluxLine (category, parentReason, reason, comment, timestamp, eq
 export function showForm (timestamp) {
   //console.log(timestamp)
   let influxUrl = utils.influxHost + 'query?pretty=true&db=smart_factory&q=select * from Availability where time >= ' + timestamp + ' limit 2'
-  let postgresUrl = utils.postgRestHost + 'reason_codes'
+  let postgresUrl = utils.postgRestHost + 'reason_code'
 
   // send query requests
   utils.get(influxUrl)
