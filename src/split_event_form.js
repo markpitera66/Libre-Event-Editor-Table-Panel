@@ -1,5 +1,6 @@
 import { appEvents } from 'app/core/core'
 import * as utils from './utils'
+import * as ctrl from './table_ctrl'
 import { refreshPanel } from './table_ctrl'
 
 let currentRecord = {}
@@ -176,6 +177,12 @@ function removeListeners () {
  */
 function splitFormSubmitListener () {
   $(document).on('click', '#event-split-form-submitBtn', e => {
+
+    if (!ctrl.isReadyToWriteInData()) {
+      utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+      return
+    }
+
     let newTimestamp = $('#event-editor-table-split-slider').slider('getValue') * 1000000
     let oldTimestamp = min * 1000000
     let maxTimestamp = max * 1000000
@@ -318,7 +325,8 @@ function dataInit (options, current, next) {
  * @param {*} forLeft
  */
 function writeInfluxLine (cur, category, reason, equipment, minTime, selectedTime, maxTime, isLeft, forLeft) {
-  let line = 'Availability,Site=' + cur.Site + ',Area=' + cur.Area + ',Line=' + cur.Line + ' '
+  const measurement = ctrl.getQueryMeasurement()
+  let line = measurement + ',Site=' + cur.Site + ',Area=' + cur.Area + ',Line=' + cur.Line + ' '
   line += 'stopped=' + cur.stopped + ','
   line += 'idle=' + cur.idle + ','
   line += 'execute=' + cur.execute + ','

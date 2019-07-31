@@ -72,6 +72,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
 
     this.panel.camundaUrl = $sce.trustAsResourceUrl(utils.camundaHost)
+    this.panel.measurementOK = false
 
     $(document).off('click', 'tr.tr-affect#event-editor-table-tr-id')
     //Show form if a row is clicked
@@ -166,6 +167,7 @@ export class TableCtrl extends MetricsPanelCtrl {
       }
     }
 
+    this.checkEndPoint(this.panel.endPoint)
     this.render();
   }
 
@@ -274,6 +276,27 @@ export class TableCtrl extends MetricsPanelCtrl {
     return records
   }
 
+  checkEndPoint(key) {
+    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key}`
+    utils.get(influxUrl).then(res => {
+      if(!res.results[0].series){
+        this.panel.measurementOK = false
+        utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+        return
+      } 
+      if(!res.results[0].series[0].columns.includes('parentReason')){
+        this.panel.measurementOK = false
+        utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+        return
+      }
+      this.panel.measurementOK = true
+    }).catch(() => {
+      this.panel.measurementOK = false
+      utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+      return
+    })
+  }
+
   getDuration(difference){
 
     const milSecs = parseInt(difference%1000)
@@ -298,7 +321,12 @@ export class TableCtrl extends MetricsPanelCtrl {
   }
 
   getInfluxLine(record, duration, durationInt){
-    let line = 'Availability,Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
+    if (!this.panel.measurementOK) {
+      console.log('not writing 1')
+      return
+    }
+    const measurement = this.panel.endPoint
+    let line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
 
     line += 'stopped=' + record.stopped + ','
     line += 'idle=' + record.idle + ','
@@ -328,7 +356,12 @@ export class TableCtrl extends MetricsPanelCtrl {
   }
 
   normalInfluxLine(record){
-    let line = 'Availability,Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
+    if (!this.panel.measurementOK) {
+      console.log('not writing')
+      return
+    }
+    const measurement = this.panel.endPoint
+    let line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
 
     line += 'stopped=' + record.stopped + ','
     line += 'idle=' + record.idle + ','
@@ -520,6 +553,22 @@ export class TableCtrl extends MetricsPanelCtrl {
 
 export const refreshPanel = () => {
   _ctrl.refresh()
+}
+
+export const getQueryMeasurement = () => {
+  return _ctrl.panel.endPoint
+}
+
+export const getReasonCodeEndPoint = () => {
+  return _ctrl.panel.reasonCodeEndPoint
+}
+
+export const getEquipmentEndPoint = () => {
+  return _ctrl.panel.equipmentEndPoint
+}
+
+export const isReadyToWriteInData = () => {
+  return _ctrl.panel.measurementOK
 }
 
 TableCtrl.templateUrl = './partials/module.html';

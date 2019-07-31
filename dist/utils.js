@@ -14,7 +14,11 @@ System.register(['app/core/core'], function (_export, _context) {
 
       _export('postgRestHost', postgRestHost = http + hostname + ':5436/');
 
+      _export('postgRestHost', postgRestHost);
+
       _export('influxHost', influxHost = http + hostname + ':8086/');
+
+      _export('influxHost', influxHost);
 
       tasklistHostName = hostname;
 
@@ -53,6 +57,8 @@ System.register(['app/core/core'], function (_export, _context) {
         });
       });
 
+      _export('get', get);
+
       _export('post', post = function post(url, line) {
         return new Promise(function (resolve, reject) {
           var xhr = new XMLHttpRequest();
@@ -81,17 +87,11 @@ System.register(['app/core/core'], function (_export, _context) {
         });
       });
 
+      _export('post', post);
+
       _export('alert', alert = function alert(type, title, msg) {
         appEvents.emit('alert-' + type, [title, msg]);
       });
-
-      _export('get', get);
-
-      _export('post', post);
-
-      _export('influxHost', influxHost);
-
-      _export('postgRestHost', postgRestHost);
 
       _export('alert', alert);
     }

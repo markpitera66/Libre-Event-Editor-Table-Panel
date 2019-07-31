@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['lodash', './transformers'], function (_export, _context) {
+System.register(['lodash', './transformers', './utils'], function (_export, _context) {
   "use strict";
 
-  var _, transformers, _createClass, TablePanelEditorCtrl;
+  var _, transformers, utils, _createClass, TablePanelEditorCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -30,6 +30,8 @@ System.register(['lodash', './transformers'], function (_export, _context) {
       _ = _lodash.default;
     }, function (_transformers) {
       transformers = _transformers.transformers;
+    }, function (_utils) {
+      utils = _utils;
     }],
     execute: function () {
       _createClass = function () {
@@ -132,6 +134,31 @@ System.register(['lodash', './transformers'], function (_export, _context) {
           key: 'render',
           value: function render() {
             this.panelCtrl.render();
+          }
+        }, {
+          key: 'checkEndPoint',
+          value: function checkEndPoint(key) {
+            var _this2 = this;
+
+            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key);
+            utils.get(influxUrl).then(function (res) {
+              if (!res.results[0].series) {
+                _this2.panelCtrl.measurementOK = false;
+                utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+                return;
+              }
+              if (!res.results[0].series[0].columns.includes('parentReason')) {
+                _this2.panelCtrl.measurementOK = false;
+                utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+                return;
+              }
+              utils.alert('success', 'Success', "The measurement you put in has been tested and it's a valid measurement");
+              _this2.panelCtrl.measurementOK = true;
+            }).catch(function () {
+              _this2.panelCtrl.measurementOK = false;
+              utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+              return;
+            });
           }
         }, {
           key: 'removeColumn',

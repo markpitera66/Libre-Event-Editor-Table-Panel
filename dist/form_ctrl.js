@@ -3,10 +3,15 @@
 System.register(['app/core/core', './split_event_form', './utils', './camundaAPI', 'moment', './instant_search_ctrl', './libs/bootstrap-slider', './table_ctrl'], function (_export, _context) {
   "use strict";
 
-  var appEvents, showSplitForm, utils, camApi, moment, enableInstantSearch, slider, refreshPanel, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
+  var appEvents, showSplitForm, utils, camApi, moment, enableInstantSearch, slider, refreshPanel, ctrl, categoryRes, equipmentRes, rowData, nextData, currentCategorySelected, retryTimes;
 
 
   function saveForm(data, timestamp) {
+
+    if (!ctrl.isReadyToWriteInData()) {
+      utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+      return;
+    }
 
     var equipment = data.filter(function (d) {
       return d.name === 'equipment';
@@ -54,7 +59,8 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
    * Write query line to update the selected record influxdb
    */
   function writeInfluxLine(category, parentReason, reason, comment, timestamp, equipment) {
-    var line = 'Availability,Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' ';
+    var measurement = ctrl.getQueryMeasurement();
+    var line = measurement + ',Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' ';
 
     line += 'stopped=' + rowData.stopped + ',';
     line += 'idle=' + rowData.idle + ',';
@@ -86,8 +92,10 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
    */
   function showForm(timestamp) {
     //console.log(timestamp)
-    var influxUrl = utils.influxHost + 'query?pretty=true&db=smart_factory&q=select * from Availability where time >= ' + timestamp + ' limit 2';
-    var postgresUrl = utils.postgRestHost + 'reason_code';
+    var measurement = ctrl.getQueryMeasurement();
+    var reason_code_endp = ctrl.getReasonCodeEndPoint();
+    var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + measurement + ' where time >= ' + timestamp + ' limit 2');
+    var postgresUrl = utils.postgRestHost + reason_code_endp;
 
     // send query requests
     utils.get(influxUrl).then(handleData).then(function (url) {
@@ -96,16 +104,22 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
       }).then(utils.get(postgresUrl).then(function (res) {
         categoryRes = res;
         popUpOptionModal(timestamp);
+      }).catch(function (e) {
+        utils.alert('error', 'Error', 'Cannot find any reason codes with ' + reason_code_endp + ', please double check the table name');
+        console.log(e);
       })).catch(function (e) {
         utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
         console.log(e);
+        return;
       }).catch(function (e) {
         utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
         console.log(e);
+        return;
       });
     }).catch(function (e) {
       utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
       console.log(e);
+      return;
     });
 
     // remove all listeners
@@ -316,7 +330,8 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
     rowData = data[0];
     nextData = data.length === 2 ? data[1] : {};
     // console.log('next record is empty ? --> ' + $.isEmptyObject(nextData))
-    var equipmentUrl = utils.postgRestHost + 'equipment?production_line=eq.' + rowData.Line + '&equipment=not.is.null';
+    var equipmentEndp = ctrl.getEquipmentEndPoint();
+    var equipmentUrl = utils.postgRestHost + (equipmentEndp + '?production_line=eq.' + rowData.Line + '&equipment=not.is.null');
     return equipmentUrl;
   }
 
@@ -532,6 +547,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
       slider = _libsBootstrapSlider.default;
     }, function (_table_ctrl) {
       refreshPanel = _table_ctrl.refreshPanel;
+      ctrl = _table_ctrl;
     }],
     execute: function () {
       categoryRes = void 0;

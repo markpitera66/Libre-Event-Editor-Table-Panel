@@ -3,7 +3,7 @@
 System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'app/plugins/sdk', './transformers', './form_ctrl', './utils', './editor', './column_options', './renderer', './css/style.css!', './css/bootstrap-slider.css!', './css/instant-search.css!'], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, showForm, utils, tablePanelEditor, columnOptionsTab, TableRenderer, _createClass, _get, timestamp, _ctrl, panelDefaults, TableCtrl, refreshPanel;
+  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, showForm, utils, tablePanelEditor, columnOptionsTab, TableRenderer, _createClass, _get, timestamp, _ctrl, panelDefaults, TableCtrl, refreshPanel, getQueryMeasurement, getReasonCodeEndPoint, getEquipmentEndPoint, isReadyToWriteInData;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -160,6 +160,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_this));
 
           _this.panel.camundaUrl = $sce.trustAsResourceUrl(utils.camundaHost);
+          _this.panel.measurementOK = false;
 
           $(document).off('click', 'tr.tr-affect#event-editor-table-tr-id');
           //Show form if a row is clicked
@@ -258,6 +259,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               }
             }
 
+            this.checkEndPoint(this.panel.endPoint);
             this.render();
           }
         }, {
@@ -377,6 +379,30 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             return records;
           }
         }, {
+          key: 'checkEndPoint',
+          value: function checkEndPoint(key) {
+            var _this3 = this;
+
+            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key);
+            utils.get(influxUrl).then(function (res) {
+              if (!res.results[0].series) {
+                _this3.panel.measurementOK = false;
+                utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+                return;
+              }
+              if (!res.results[0].series[0].columns.includes('parentReason')) {
+                _this3.panel.measurementOK = false;
+                utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+                return;
+              }
+              _this3.panel.measurementOK = true;
+            }).catch(function () {
+              _this3.panel.measurementOK = false;
+              utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+              return;
+            });
+          }
+        }, {
           key: 'getDuration',
           value: function getDuration(difference) {
 
@@ -403,7 +429,12 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }, {
           key: 'getInfluxLine',
           value: function getInfluxLine(record, duration, durationInt) {
-            var line = 'Availability,Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
+            if (!this.panel.measurementOK) {
+              console.log('not writing 1');
+              return;
+            }
+            var measurement = this.panel.endPoint;
+            var line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
 
             line += 'stopped=' + record.stopped + ',';
             line += 'idle=' + record.idle + ',';
@@ -434,7 +465,12 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }, {
           key: 'normalInfluxLine',
           value: function normalInfluxLine(record) {
-            var line = 'Availability,Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
+            if (!this.panel.measurementOK) {
+              console.log('not writing');
+              return;
+            }
+            var measurement = this.panel.endPoint;
+            var line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
 
             line += 'stopped=' + record.stopped + ',';
             line += 'idle=' + record.idle + ',';
@@ -632,6 +668,30 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       });
 
       _export('refreshPanel', refreshPanel);
+
+      _export('getQueryMeasurement', getQueryMeasurement = function getQueryMeasurement() {
+        return _ctrl.panel.endPoint;
+      });
+
+      _export('getQueryMeasurement', getQueryMeasurement);
+
+      _export('getReasonCodeEndPoint', getReasonCodeEndPoint = function getReasonCodeEndPoint() {
+        return _ctrl.panel.reasonCodeEndPoint;
+      });
+
+      _export('getReasonCodeEndPoint', getReasonCodeEndPoint);
+
+      _export('getEquipmentEndPoint', getEquipmentEndPoint = function getEquipmentEndPoint() {
+        return _ctrl.panel.equipmentEndPoint;
+      });
+
+      _export('getEquipmentEndPoint', getEquipmentEndPoint);
+
+      _export('isReadyToWriteInData', isReadyToWriteInData = function isReadyToWriteInData() {
+        return _ctrl.panel.measurementOK;
+      });
+
+      _export('isReadyToWriteInData', isReadyToWriteInData);
 
       TableCtrl.templateUrl = './partials/module.html';
     }

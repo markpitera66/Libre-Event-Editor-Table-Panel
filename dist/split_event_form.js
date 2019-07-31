@@ -3,7 +3,7 @@
 System.register(['app/core/core', './utils', './table_ctrl'], function (_export, _context) {
   "use strict";
 
-  var appEvents, utils, refreshPanel, currentRecord, nextRecord, min, max, reasonsStr, categoryStr, equipmentStr, isTimeEditing, isSplittingLeft, retryTimes;
+  var appEvents, utils, ctrl, refreshPanel, currentRecord, nextRecord, min, max, reasonsStr, categoryStr, equipmentStr, isTimeEditing, isSplittingLeft, retryTimes;
 
   /**
    * Show the split form with @param [array] options , which is an arr with category and reasons chosen in the editor form
@@ -168,6 +168,12 @@ System.register(['app/core/core', './utils', './table_ctrl'], function (_export,
    */
   function splitFormSubmitListener() {
     $(document).on('click', '#event-split-form-submitBtn', function (e) {
+
+      if (!ctrl.isReadyToWriteInData()) {
+        utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
+        return;
+      }
+
       var newTimestamp = $('#event-editor-table-split-slider').slider('getValue') * 1000000;
       var oldTimestamp = min * 1000000;
       var maxTimestamp = max * 1000000;
@@ -309,7 +315,8 @@ System.register(['app/core/core', './utils', './table_ctrl'], function (_export,
    * @param {*} forLeft
    */
   function writeInfluxLine(cur, category, reason, equipment, minTime, selectedTime, maxTime, isLeft, forLeft) {
-    var line = 'Availability,Site=' + cur.Site + ',Area=' + cur.Area + ',Line=' + cur.Line + ' ';
+    var measurement = ctrl.getQueryMeasurement();
+    var line = measurement + ',Site=' + cur.Site + ',Area=' + cur.Area + ',Line=' + cur.Line + ' ';
     line += 'stopped=' + cur.stopped + ',';
     line += 'idle=' + cur.idle + ',';
     line += 'execute=' + cur.execute + ',';
@@ -428,6 +435,7 @@ System.register(['app/core/core', './utils', './table_ctrl'], function (_export,
     }, function (_utils) {
       utils = _utils;
     }, function (_table_ctrl) {
+      ctrl = _table_ctrl;
       refreshPanel = _table_ctrl.refreshPanel;
     }],
     execute: function () {

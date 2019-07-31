@@ -6,6 +6,7 @@ import moment from 'moment'
 import { enableInstantSearch } from './instant_search_ctrl'
 import slider from './libs/bootstrap-slider'
 import { refreshPanel } from './table_ctrl'
+import * as ctrl from './table_ctrl'
 
 let categoryRes
 let equipmentRes
@@ -14,6 +15,11 @@ let nextData;
 let currentCategorySelected
 
 function saveForm (data, timestamp) {
+
+  if (!ctrl.isReadyToWriteInData()) {
+    utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+    return
+  }
   
   const equipment = data.filter(d => d.name === 'equipment')[0].value
 
@@ -55,7 +61,8 @@ function saveForm (data, timestamp) {
  * Write query line to update the selected record influxdb
  */
 function writeInfluxLine (category, parentReason, reason, comment, timestamp, equipment) {
-  let line = 'Availability,Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' '
+  const measurement = ctrl.getQueryMeasurement()
+  let line = measurement + ',Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' '
 
   line += 'stopped=' + rowData.stopped + ','
   line += 'idle=' + rowData.idle + ','
@@ -87,8 +94,10 @@ function writeInfluxLine (category, parentReason, reason, comment, timestamp, eq
  */
 export function showForm (timestamp) {
   //console.log(timestamp)
-  let influxUrl = utils.influxHost + 'query?pretty=true&db=smart_factory&q=select * from Availability where time >= ' + timestamp + ' limit 2'
-  let postgresUrl = utils.postgRestHost + 'reason_code'
+  const measurement = ctrl.getQueryMeasurement()
+  const reason_code_endp = ctrl.getReasonCodeEndPoint()
+  let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${measurement} where time >= ${timestamp} limit 2`
+  let postgresUrl = utils.postgRestHost + reason_code_endp
 
   // send query requests
   utils.get(influxUrl)
@@ -101,19 +110,25 @@ export function showForm (timestamp) {
             .then(res => {
                 categoryRes = res
                 popUpOptionModal(timestamp)
+            }).catch(e => {
+              utils.alert('error', 'Error', `Cannot find any reason codes with ${reason_code_endp}, please double check the table name`)
+              console.log(e)
             })
           ).catch(e => {
             utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
             console.log(e)
+            return
           })
         .catch(e => {
           utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
           console.log(e)
+          return
         })
     )
     .catch(e => {
-        utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
+      utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
       console.log(e)
+      return
     })
 
   // remove all listeners
@@ -326,7 +341,8 @@ function handleData (res) {
   rowData = data[0]
   nextData = data.length === 2 ? data[1] : {}
   // console.log('next record is empty ? --> ' + $.isEmptyObject(nextData))
-  let equipmentUrl = utils.postgRestHost + 'equipment?production_line=eq.' + rowData.Line + '&equipment=not.is.null'
+  const equipmentEndp = ctrl.getEquipmentEndPoint()
+  let equipmentUrl = utils.postgRestHost + `${equipmentEndp}?production_line=eq.${rowData.Line}&equipment=not.is.null`
   return equipmentUrl
 }
 

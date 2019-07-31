@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { transformers } from './transformers';
+import * as utils from './utils'
 
 export class TablePanelEditorCtrl {
 
@@ -68,6 +69,28 @@ export class TablePanelEditorCtrl {
 
   render() {
     this.panelCtrl.render();
+  }
+
+  checkEndPoint(key){
+    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key}`
+    utils.get(influxUrl).then(res => {
+      if(!res.results[0].series){
+        this.panelCtrl.measurementOK = false
+        utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+        return
+      } 
+      if(!res.results[0].series[0].columns.includes('parentReason')){
+        this.panelCtrl.measurementOK = false
+        utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+        return
+      }
+      utils.alert('success', 'Success', "The measurement you put in has been tested and it's a valid measurement")
+      this.panelCtrl.measurementOK = true
+    }).catch(() => {
+      this.panelCtrl.measurementOK = false
+      utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
+      return
+    })
   }
 
   removeColumn(column) {
