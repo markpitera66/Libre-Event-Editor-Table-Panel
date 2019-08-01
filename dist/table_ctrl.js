@@ -442,8 +442,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
             line += 'complete=' + record.complete + ',';
-            console.log(record.status);
-            line += 'status="' + record.status + '"' + ',';
+
+            if (record.status !== null && record.status !== undefined) {
+              line += 'status="' + record.status + '"' + ',';
+            }
 
             if (record.parentReason !== null && record.parentReason !== undefined) {
               line += 'parentReason="' + record.parentReason + '"' + ',';
