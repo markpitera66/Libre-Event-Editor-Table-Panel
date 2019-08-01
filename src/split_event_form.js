@@ -326,13 +326,34 @@ function dataInit (options, current, next) {
  */
 function writeInfluxLine (cur, category, reason, equipment, minTime, selectedTime, maxTime, isLeft, forLeft) {
   const measurement = ctrl.getQueryMeasurement()
-  let line = measurement + ',Site=' + cur.Site + ',Area=' + cur.Area + ',Line=' + cur.Line + ' '
+  let line = measurement + ',Site=' + utils.addSlash(cur.Site, ' ') + ',Area=' + utils.addSlash(cur.Area, ' ') + ',Line=' + utils.addSlash(cur.Line, ' ') + ' '
   line += 'stopped=' + cur.stopped + ','
   line += 'idle=' + cur.idle + ','
   line += 'execute=' + cur.execute + ','
-  line += 'held=' + cur.held + ','
-  line += 'complete=' + cur.complete
-  line += ',' + 'status="' + cur.status + '"'
+  
+
+  if (cur.status !== null && cur.status !== undefined) {
+    line += 'status="' + cur.status + '"' + ','
+  }
+
+  if (cur.machinestate !== null && cur.machinestate !== undefined) {
+    line += 'MachineState="' + cur.machinestate + '"' + ','
+  }
+
+  if (cur.actual_rate !== null && cur.actual_rate !== undefined) {
+    line += 'actual_rate=' + cur.actual_rate + ','
+  }
+
+  if (cur.rid_1 !== null && cur.rid_1 !== undefined) {
+    line += 'rid_1="' + cur.rid_1 + '"' + ','
+  }
+
+  console.log(cur)
+  // if(cur.complete !== null || cur.complete !== undefined) {
+  //   line += 'complete=' + cur.complete + ','
+  // }
+
+  line += 'held=' + cur.held
 
   if (forLeft) {
     if (cur.comment !== null && cur.comment !== undefined && cur.comment !== '') {
