@@ -314,6 +314,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                   }
                   recordsToUpdate.forEach(function (record) {
                     console.log(allTimestamps);
+                    console.log(record.time);
+                    console.log(allTimestamps.indexOf(record.time) === allTimestamps.length - 1);
                     if (allTimestamps.indexOf(record.time) === allTimestamps.length - 1) {
                       //The most updated record, calculate the duration by now()
                       var difference = new Date().getTime() - record.time;
