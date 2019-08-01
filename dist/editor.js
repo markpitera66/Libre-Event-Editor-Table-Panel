@@ -147,6 +147,7 @@ System.register(['lodash', './transformers', './utils'], function (_export, _con
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
                 return;
               }
+              console.log(res);
               if (!res.results[0].series[0].columns.includes('held')) {
                 _this2.panelCtrl.measurementOK = false;
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");

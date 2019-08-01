@@ -79,6 +79,7 @@ export class TablePanelEditorCtrl {
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
         return
       } 
+      console.log(res)
       if(!res.results[0].series[0].columns.includes('held')){
         this.panelCtrl.measurementOK = false
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
