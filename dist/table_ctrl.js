@@ -293,6 +293,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 if (cols.indexOf('duration') !== -1) {
                   //contains duration, continue
                   var allRecords = this.getRecords(cols, data.rows);
+                  console.log(allRecords);
                   var allTimestamps = allRecords.reduce(function (arr, record) {
                     var timestamp = record.time;
                     arr.push(timestamp);

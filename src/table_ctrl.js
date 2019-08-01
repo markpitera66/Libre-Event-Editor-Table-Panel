@@ -193,6 +193,7 @@ export class TableCtrl extends MetricsPanelCtrl {
         if (cols.indexOf('duration') !== -1) {
           //contains duration, continue
           let allRecords = this.getRecords(cols, data.rows)
+          console.log(allRecords)
           let allTimestamps = allRecords.reduce((arr, record) => {
             let timestamp = record.time
             arr.push(timestamp)
