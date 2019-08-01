@@ -68,11 +68,11 @@ export class TablePanelEditorCtrl {
   }
 
   render() {
-    this.panelCtrl.render();
+    this.panelCtrl.refresh();
   }
 
   checkEndPoint(key){
-    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key}`
+    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`
     utils.get(influxUrl).then(res => {
       if(!res.results[0].series){
         this.panelCtrl.measurementOK = false

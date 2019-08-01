@@ -133,14 +133,14 @@ System.register(['lodash', './transformers', './utils'], function (_export, _con
         }, {
           key: 'render',
           value: function render() {
-            this.panelCtrl.render();
+            this.panelCtrl.refresh();
           }
         }, {
           key: 'checkEndPoint',
           value: function checkEndPoint(key) {
             var _this2 = this;
 
-            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key);
+            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key + ' limit 1');
             utils.get(influxUrl).then(function (res) {
               if (!res.results[0].series) {
                 _this2.panelCtrl.measurementOK = false;

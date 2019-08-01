@@ -130,7 +130,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         columns: [],
         scroll: true,
         fontSize: '100%',
-        sort: { col: 0, desc: true }
+        sort: { col: 0, desc: true },
+        durationFilter: 3
       };
 
       _export('TableCtrl', TableCtrl = function (_MetricsPanelCtrl) {
@@ -242,6 +243,16 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               }
             }
 
+            // filter shorter duration
+            if (dataList.length !== 0) {
+              if (this.panel.durationFilter) {
+                if (isNaN(this.panel.durationFilter)) {
+                  this.panel.durationFilter = 3;
+                }
+                dataList = this.filterDuration(this.panel.durationFilter, dataList);
+              }
+            }
+
             this.dataRaw = dataList;
             this.pageIndex = 0;
             // automatically correct transform mode based on data
@@ -274,8 +285,28 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 return row[indexOfexecute] !== 1;
               });
               data[0].rows = filteredRows;
-              filteredData = data;
             }
+            filteredData = data;
+            return filteredData;
+          }
+        }, {
+          key: 'filterDuration',
+          value: function filterDuration(minDur, data) {
+            var minDurVal = moment.duration(minDur, 'minutes').valueOf();
+            var filteredData = void 0;
+            if (data[0].columns !== null && data[0].columns !== undefined) {
+              var index = data[0].columns.findIndex(function (x) {
+                return x.text.toLowerCase() === 'durationint';
+              });
+              if (!~index) {
+                return data;
+              }
+              var filteredRows = data[0].rows.filter(function (row) {
+                return row[index] >= minDurVal;
+              });
+              data[0].rows = filteredRows;
+            }
+            filteredData = data;
             return filteredData;
           }
         }, {
@@ -389,7 +420,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           value: function checkEndPoint(key) {
             var _this3 = this;
 
-            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key);
+            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key + ' limit 1');
             utils.get(influxUrl).then(function (res) {
               if (!res.results[0].series) {
                 _this3.panel.measurementOK = false;
@@ -450,10 +481,9 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
 
-            console.log(record);
-            // if(record.complete !== null || record.complete !== undefined) {
-            //   line += 'complete=' + record.complete + ','
-            // }
+            if (record.complete !== null && record.complete !== undefined) {
+              line += 'complete=' + record.complete + ',';
+            }
 
             if (record.status !== null && record.status !== undefined) {
               line += 'status="' + record.status + '"' + ',';
@@ -510,10 +540,9 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
 
-            console.log(record);
-            // if(record.complete !== null || record.complete !== undefined) {
-            //   line += 'complete=' + record.complete + ','
-            // }
+            if (record.complete !== null && record.complete !== undefined) {
+              line += 'complete=' + record.complete + ',';
+            }
 
             if (record.MachineState !== null && record.MachineState !== undefined) {
               line += 'MachineState="' + record.MachineState + '"' + ',';

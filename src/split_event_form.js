@@ -348,10 +348,9 @@ function writeInfluxLine (cur, category, reason, equipment, minTime, selectedTim
     line += 'rid_1="' + cur.rid_1 + '"' + ','
   }
 
-  console.log(cur)
-  // if(cur.complete !== null || cur.complete !== undefined) {
-  //   line += 'complete=' + cur.complete + ','
-  // }
+  if(cur.complete !== null && cur.complete !== undefined) {
+    line += 'complete=' + cur.complete + ','
+  }
 
   line += 'held=' + cur.held
 

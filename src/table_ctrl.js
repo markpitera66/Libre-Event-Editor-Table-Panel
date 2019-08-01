@@ -46,6 +46,7 @@ const panelDefaults = {
   scroll: true,
   fontSize: '100%',
   sort: { col: 0, desc: true },
+  durationFilter: 3
 };
 
 export class TableCtrl extends MetricsPanelCtrl {
@@ -150,6 +151,16 @@ export class TableCtrl extends MetricsPanelCtrl {
       }
     }
 
+    // filter shorter duration
+    if (dataList.length !== 0) {
+      if (this.panel.durationFilter) {
+        if (isNaN(this.panel.durationFilter)) {
+          this.panel.durationFilter = 3
+        }
+        dataList = this.filterDuration(this.panel.durationFilter, dataList) 
+      }
+    }
+    
     this.dataRaw = dataList;
     this.pageIndex = 0;
     // automatically correct transform mode based on data
@@ -177,9 +188,22 @@ export class TableCtrl extends MetricsPanelCtrl {
       let indexOfexecute = data[0].columns.findIndex(x => x.text.toLowerCase() === 'execute')
       let filteredRows = data[0].rows.filter(row => row[indexOfexecute] !== 1)
       data[0].rows = filteredRows
-      filteredData = data
     }
+    filteredData = data
     return filteredData;
+  }
+
+  filterDuration(minDur, data){
+    const minDurVal = moment.duration(minDur, 'minutes').valueOf()
+    let filteredData;
+    if (data[0].columns !== null && data[0].columns !== undefined) {
+      let index = data[0].columns.findIndex(x => x.text.toLowerCase() === 'durationint')
+      if (!~index) { return data }
+      let filteredRows = data[0].rows.filter(row => row[index] >= minDurVal)
+      data[0].rows = filteredRows
+    }
+    filteredData = data
+    return filteredData
   }
 
   handle(data){
@@ -283,7 +307,7 @@ export class TableCtrl extends MetricsPanelCtrl {
   }
 
   checkEndPoint(key) {
-    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key}`
+    let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`
     utils.get(influxUrl).then(res => {
       if(!res.results[0].series){
         this.panel.measurementOK = false
@@ -342,10 +366,9 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
     
-    console.log(record)
-    // if(record.complete !== null || record.complete !== undefined) {
-    //   line += 'complete=' + record.complete + ','
-    // }
+    if(record.complete !== null && record.complete !== undefined) {
+      line += 'complete=' + record.complete + ','
+    }
 
     if (record.status !== null && record.status !== undefined) {
       line += 'status="' + record.status + '"' + ','
@@ -401,10 +424,9 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
 
-    console.log(record)
-    // if(record.complete !== null || record.complete !== undefined) {
-    //   line += 'complete=' + record.complete + ','
-    // }
+    if(record.complete !== null && record.complete !== undefined) {
+      line += 'complete=' + record.complete + ','
+    }
 
     if (record.MachineState !== null && record.MachineState !== undefined) {
       line += 'MachineState="' + record.MachineState + '"' + ','

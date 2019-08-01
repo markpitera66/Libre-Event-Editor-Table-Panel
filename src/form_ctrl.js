@@ -69,10 +69,9 @@ function writeInfluxLine (category, parentReason, reason, comment, timestamp, eq
   line += 'execute=' + rowData.execute + ','
   line += 'held=' + rowData.held + ','
 
-  console.log(rowData)
-  // if(rowData.complete !== null || rowData.complete !== undefined) {
-  //   line += 'complete=' + rowData.complete + ','
-  // }
+  if(rowData.complete !== null && rowData.complete !== undefined) {
+    line += 'complete=' + rowData.complete + ','
+  }
 
   if (rowData.status !== null && rowData.status !== undefined) {
     line += 'status="' + rowData.status + '"' + ','

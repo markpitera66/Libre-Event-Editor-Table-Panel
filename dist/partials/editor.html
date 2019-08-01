@@ -56,6 +56,18 @@
   <div class="section gf-form-group">
 		<h5 class="section-heading">Row Option</h5>
     <gf-form-switch class="gf-form" label-class="width-8" switch-class="max-width-7" label="Hide execute" checked="editor.panel.hideExecute" on-change="editor.render()"></gf-form-switch>
+    <div class="gf-form">
+      <label class="gf-form-label width-8">
+        Min Duration <info-popover mode="right-normal" style="position: absolute; left: 73px; top: 10px">
+          This filters out records with duration shorter than the this filter value. Unit = Minutes
+        </info-popover>
+      </label>
+      <input type="number" class="gf-form-input width-6"
+                            placeholder="Minutes" data-placement="right"
+                                              ng-model="editor.panel.durationFilter"
+                                              ng-blur="editor.render()"
+                                              >
+    </div>
   </div>
 
   <div class="section gf-form-group">
@@ -69,8 +81,8 @@
       <input type="text" class="gf-form-input width-9"
                            placeholder="Availability" data-placement="right"
                                              ng-model="editor.panel.endPoint"
-                                             ng-change="editor.checkEndPoint(editor.panel.endPoint)"
-                                             ng-model-onblur>
+                                             ng-blur="editor.checkEndPoint(editor.panel.endPoint)"
+                                             >
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-8">
@@ -81,7 +93,7 @@
       <input type="text" class="gf-form-input width-9"
                            placeholder="table name" data-placement="right"
                                              ng-model="editor.panel.reasonCodeEndPoint"
-                                             ng-model-onblur>
+                                             >
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-8">
@@ -92,7 +104,7 @@
       <input type="text" class="gf-form-input width-9"
                            placeholder="table name" data-placement="right"
                                              ng-model="editor.panel.equipmentEndPoint"
-                                             ng-model-onblur>
+                                             >
     </div>
   </div>
 </div>
