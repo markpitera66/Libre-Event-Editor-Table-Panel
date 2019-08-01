@@ -213,6 +213,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             if (allTimestamps.indexOf(record.time) === allTimestamps.length - 1) {
               //The most updated record, calculate the duration by now()
               let difference = new Date().getTime() - record.time
+              console.log('record time', record.time)
               let duration = this.getDuration(difference)
               let line = this.getInfluxLine(record, duration, difference)
               // console.log(record);
@@ -229,6 +230,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             }else {
               //other records
               let difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time
+              console.log('record time 2', record.time)
               let duration = this.getDuration(difference)
               let line = this.getInfluxLine(record, duration, difference)
             //   console.log('other updated');

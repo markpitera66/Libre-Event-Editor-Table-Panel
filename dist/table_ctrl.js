@@ -315,6 +315,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     if (allTimestamps.indexOf(record.time) === allTimestamps.length - 1) {
                       //The most updated record, calculate the duration by now()
                       var difference = new Date().getTime() - record.time;
+                      console.log('record time', record.time);
                       var duration = _this2.getDuration(difference);
                       var line = _this2.getInfluxLine(record, duration, difference);
                       // console.log(record);
@@ -331,6 +332,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     } else {
                       //other records
                       var _difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time;
+                      console.log('record time 2', record.time);
                       var _duration = _this2.getDuration(_difference);
                       var _line = _this2.getInfluxLine(record, _duration, _difference);
                       //   console.log('other updated');
