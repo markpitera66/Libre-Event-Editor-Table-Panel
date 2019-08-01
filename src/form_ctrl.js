@@ -62,7 +62,7 @@ function saveForm (data, timestamp) {
  */
 function writeInfluxLine (category, parentReason, reason, comment, timestamp, equipment) {
   const measurement = ctrl.getQueryMeasurement()
-  let line = measurement + ',Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' '
+  let line = measurement + ',Site=' + utils.addSlash(rowData.Site) + ',Area='  + utils.addSlash(rowData.Area) + ',Line=' + utils.addSlash(rowData.Line) + ' '
 
   line += 'stopped=' + rowData.stopped + ','
   line += 'idle=' + rowData.idle + ','

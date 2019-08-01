@@ -60,7 +60,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
    */
   function writeInfluxLine(category, parentReason, reason, comment, timestamp, equipment) {
     var measurement = ctrl.getQueryMeasurement();
-    var line = measurement + ',Site=' + rowData.Site + ',Area=' + rowData.Area + ',Line=' + rowData.Line + ' ';
+    var line = measurement + ',Site=' + utils.addSlash(rowData.Site) + ',Area=' + utils.addSlash(rowData.Area) + ',Line=' + utils.addSlash(rowData.Line) + ' ';
 
     line += 'stopped=' + rowData.stopped + ',';
     line += 'idle=' + rowData.idle + ',';
