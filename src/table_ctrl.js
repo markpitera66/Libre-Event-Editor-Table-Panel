@@ -339,7 +339,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
     
-    console.log(record.complete)
+    console.log(record)
     // if(record.complete !== null || record.complete !== undefined) {
     //   line += 'complete=' + record.complete + ','
     // }
@@ -398,7 +398,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
 
-    console.log(record.complete)
+    console.log(record)
     // if(record.complete !== null || record.complete !== undefined) {
     //   line += 'complete=' + record.complete + ','
     // }

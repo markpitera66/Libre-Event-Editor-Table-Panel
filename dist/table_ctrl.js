@@ -447,7 +447,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
 
-            console.log(record.complete);
+            console.log(record);
             // if(record.complete !== null || record.complete !== undefined) {
             //   line += 'complete=' + record.complete + ','
             // }
@@ -507,7 +507,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
 
-            console.log(record.complete);
+            console.log(record);
             // if(record.complete !== null || record.complete !== undefined) {
             //   line += 'complete=' + record.complete + ','
             // }
