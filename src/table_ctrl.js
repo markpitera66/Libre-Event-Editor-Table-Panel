@@ -210,6 +210,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             // console.log('update newest one')
           }
           recordsToUpdate.forEach(record => {
+            console.log(allTimestamps)
             if (allTimestamps.indexOf(record.time) === allTimestamps.length - 1) {
               //The most updated record, calculate the duration by now()
               let difference = new Date().getTime() - record.time
