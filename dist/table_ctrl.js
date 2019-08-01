@@ -456,6 +456,22 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               line += 'status="' + record.status + '"' + ',';
             }
 
+            if (record.MachineState !== null && record.MachineState !== undefined) {
+              line += 'MachineState="' + record.MachineState + '"' + ',';
+            }
+
+            if (record.actual_rate !== null && record.actual_rate !== undefined) {
+              line += 'actual_rate=' + record.actual_rate + ',';
+            }
+
+            if (record.rid !== null && record.rid !== undefined) {
+              line += 'rid="' + record.rid + '"' + ',';
+            }
+
+            if (record.MachineState !== null && record.MachineState !== undefined) {
+              line += 'MachineState="' + record.MachineState + '"' + ',';
+            }
+
             if (record.parentReason !== null && record.parentReason !== undefined) {
               line += 'parentReason="' + record.parentReason + '"' + ',';
             }
@@ -495,6 +511,18 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             // if(record.complete !== null || record.complete !== undefined) {
             //   line += 'complete=' + record.complete + ','
             // }
+
+            if (record.MachineState !== null && record.MachineState !== undefined) {
+              line += 'MachineState="' + record.MachineState + '"' + ',';
+            }
+
+            if (record.rid !== null && record.rid !== undefined) {
+              line += 'rid="' + record.rid + '"' + ',';
+            }
+
+            if (record.actual_rate !== null && record.actual_rate !== undefined) {
+              line += 'actual_rate=' + record.actual_rate + ',';
+            }
 
             if (record.status !== null && record.status !== undefined) {
               line += 'status="' + record.status + '"' + ',';
