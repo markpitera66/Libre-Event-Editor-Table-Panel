@@ -59,6 +59,10 @@ export const post = (url, line) => {
   })
 }
 
+export const addSlash = (target, key) => {
+  return target.split(key).join(`\\${key}`)
+}
+
 export const alert = (type, title, msg) => {
   appEvents.emit('alert-' + type, [title, msg])
 }

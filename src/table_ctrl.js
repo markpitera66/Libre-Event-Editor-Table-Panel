@@ -327,7 +327,7 @@ export class TableCtrl extends MetricsPanelCtrl {
       return
     }
     const measurement = this.panel.endPoint
-    let line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
+    let line = measurement + ',Site=' + utils.addSlash(record.site, ' ') + ',Area=' + utils.addSlash(record.area, ' ') + ',Line=' + utils.addSlash(record.line, ' ') + ' '
 
     line += 'stopped=' + record.stopped + ','
     line += 'idle=' + record.idle + ','
@@ -363,7 +363,7 @@ export class TableCtrl extends MetricsPanelCtrl {
       return
     }
     const measurement = this.panel.endPoint
-    let line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' '
+    let line = measurement + ',Site=' + utils.addSlash(record.site, ' ') + ',Area=' + utils.addSlash(record.area, ' ') + ',Line=' + utils.addSlash(record.line, ' ') + ' '
 
     line += 'stopped=' + record.stopped + ','
     line += 'idle=' + record.idle + ','

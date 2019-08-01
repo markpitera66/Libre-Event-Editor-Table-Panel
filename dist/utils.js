@@ -3,7 +3,7 @@
 System.register(['app/core/core'], function (_export, _context) {
   "use strict";
 
-  var appEvents, hostname, http, postgRestHost, influxHost, tasklistHostName, camundaHost, camundaRestApi, get, post, alert;
+  var appEvents, hostname, http, postgRestHost, influxHost, tasklistHostName, camundaHost, camundaRestApi, get, post, addSlash, alert;
   return {
     setters: [function (_appCoreCore) {
       appEvents = _appCoreCore.appEvents;
@@ -88,6 +88,12 @@ System.register(['app/core/core'], function (_export, _context) {
       });
 
       _export('post', post);
+
+      _export('addSlash', addSlash = function addSlash(target, key) {
+        return target.split(key).join('\\' + key);
+      });
+
+      _export('addSlash', addSlash);
 
       _export('alert', alert = function alert(type, title, msg) {
         appEvents.emit('alert-' + type, [title, msg]);

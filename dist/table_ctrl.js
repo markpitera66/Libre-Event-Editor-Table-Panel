@@ -435,7 +435,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               return;
             }
             var measurement = this.panel.endPoint;
-            var line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
+            var line = measurement + ',Site=' + utils.addSlash(record.site, ' ') + ',Area=' + utils.addSlash(record.area, ' ') + ',Line=' + utils.addSlash(record.line, ' ') + ' ';
 
             line += 'stopped=' + record.stopped + ',';
             line += 'idle=' + record.idle + ',';
@@ -472,7 +472,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               return;
             }
             var measurement = this.panel.endPoint;
-            var line = measurement + ',Site=' + record.site + ',Area=' + record.area + ',Line=' + record.line + ' ';
+            var line = measurement + ',Site=' + utils.addSlash(record.site, ' ') + ',Area=' + utils.addSlash(record.area, ' ') + ',Line=' + utils.addSlash(record.line, ' ') + ' ';
 
             line += 'stopped=' + record.stopped + ',';
             line += 'idle=' + record.idle + ',';
