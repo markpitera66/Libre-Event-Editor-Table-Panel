@@ -100,36 +100,27 @@ export function showForm (timestamp) {
   let postgresUrl = utils.postgRestHost + reason_code_endp
 
   // send query requests
-  utils.get(influxUrl)
-    .then(handleData)
-    .then(url =>
-      utils.get(url)
-        .then(res => {
-          equipmentRes = res
-        }).then(utils.get(postgresUrl)
-            .then(res => {
-                categoryRes = res
-                popUpOptionModal(timestamp)
-            }).catch(e => {
-              utils.alert('error', 'Error', `Cannot find any reason codes with ${reason_code_endp}, please double check the table name`)
-              console.log(e)
-            })
-          ).catch(e => {
-            utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
-            console.log(e)
-            return
-          })
-        .catch(e => {
-          utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
-          console.log(e)
-          return
-        })
-    )
-    .catch(e => {
-      utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again')
+  utils.get(influxUrl).then((res) => {
+    const result = handleData(res)
+    const equipmentUrl = result[0]
+    const equipEndp = result[1]
+    utils.get(equipmentUrl).then(res => {
+      equipmentRes = res
+      utils.get(postgresUrl).then(res => {
+        categoryRes = res
+        popUpOptionModal(timestamp)
+      }).catch(e => {
+        utils.alert('error', 'Error', `${reason_code_endp} is not a valid data source, please double check the table name`)
+        console.log(e)
+      })
+    }).catch(e => {
+      utils.alert('error', 'Error', `${equipEndp} is not a valid data source, please double check the table name`)
       console.log(e)
-      return
     })
+  }).catch(e => {
+    utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from influxdb, please try again')
+    console.log(e)
+  })
 
   // remove all listeners
   removeOptionListeners()
@@ -343,7 +334,7 @@ function handleData (res) {
   // console.log('next record is empty ? --> ' + $.isEmptyObject(nextData))
   const equipmentEndp = ctrl.getEquipmentEndPoint()
   let equipmentUrl = utils.postgRestHost + `${equipmentEndp}?production_line=eq.${rowData.Line}&equipment=not.is.null`
-  return equipmentUrl
+  return [equipmentUrl, equipmentEndp]
 }
 
 /**

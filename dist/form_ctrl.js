@@ -98,28 +98,26 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
     var postgresUrl = utils.postgRestHost + reason_code_endp;
 
     // send query requests
-    utils.get(influxUrl).then(handleData).then(function (url) {
-      return utils.get(url).then(function (res) {
+    utils.get(influxUrl).then(function (res) {
+      var result = handleData(res);
+      var equipmentUrl = result[0];
+      var equipEndp = result[1];
+      utils.get(equipmentUrl).then(function (res) {
         equipmentRes = res;
-      }).then(utils.get(postgresUrl).then(function (res) {
-        categoryRes = res;
-        popUpOptionModal(timestamp);
+        utils.get(postgresUrl).then(function (res) {
+          categoryRes = res;
+          popUpOptionModal(timestamp);
+        }).catch(function (e) {
+          utils.alert('error', 'Error', reason_code_endp + ' is not a valid data source, please double check the table name');
+          console.log(e);
+        });
       }).catch(function (e) {
-        utils.alert('error', 'Error', 'Cannot find any reason codes with ' + reason_code_endp + ', please double check the table name');
+        utils.alert('error', 'Error', equipEndp + ' is not a valid data source, please double check the table name');
         console.log(e);
-      })).catch(function (e) {
-        utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
-        console.log(e);
-        return;
-      }).catch(function (e) {
-        utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
-        console.log(e);
-        return;
       });
     }).catch(function (e) {
-      utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from database, please try again');
+      utils.alert('error', 'Error', 'Unexpected error occurred whiling getting data from influxdb, please try again');
       console.log(e);
-      return;
     });
 
     // remove all listeners
@@ -332,7 +330,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
     // console.log('next record is empty ? --> ' + $.isEmptyObject(nextData))
     var equipmentEndp = ctrl.getEquipmentEndPoint();
     var equipmentUrl = utils.postgRestHost + (equipmentEndp + '?production_line=eq.' + rowData.Line + '&equipment=not.is.null');
-    return equipmentUrl;
+    return [equipmentUrl, equipmentEndp];
   }
 
   /**
