@@ -441,7 +441,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'idle=' + record.idle + ',';
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
-            line += 'complete=' + record.complete + ',';
+
+            if (record.complete !== null || record.complete !== undefined) {
+              line += 'complete=' + record.complete + ',';
+            }
 
             if (record.status !== null && record.status !== undefined) {
               line += 'status="' + record.status + '"' + ',';
@@ -481,7 +484,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             line += 'idle=' + record.idle + ',';
             line += 'execute=' + record.execute + ',';
             line += 'held=' + record.held + ',';
-            line += 'complete=' + record.complete + ',';
+
+            if (record.complete !== null || record.complete !== undefined) {
+              line += 'complete=' + record.complete + ',';
+            }
 
             if (record.status !== null && record.status !== undefined) {
               line += 'status="' + record.status + '"' + ',';
