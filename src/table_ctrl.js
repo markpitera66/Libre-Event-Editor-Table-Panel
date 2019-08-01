@@ -300,6 +300,8 @@ export class TableCtrl extends MetricsPanelCtrl {
 
   getDuration(difference){
 
+    console.log('diff', difference)
+
     const milSecs = parseInt(difference%1000)
 
     const daysDiff = Math.floor(difference/1000/60/60/24)

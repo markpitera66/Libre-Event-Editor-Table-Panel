@@ -407,6 +407,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           key: 'getDuration',
           value: function getDuration(difference) {
 
+            console.log('diff', difference);
+
             var milSecs = parseInt(difference % 1000);
 
             var daysDiff = Math.floor(difference / 1000 / 60 / 60 / 24);
