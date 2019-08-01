@@ -102,6 +102,7 @@ export function showForm (timestamp) {
   // send query requests
   utils.get(influxUrl).then((res) => {
     const result = handleData(res)
+    console.log(result)
     const equipmentUrl = result[0]
     const equipEndp = result[1]
     utils.get(equipmentUrl).then(res => {

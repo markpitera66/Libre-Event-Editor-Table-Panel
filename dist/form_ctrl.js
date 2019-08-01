@@ -100,6 +100,7 @@ System.register(['app/core/core', './split_event_form', './utils', './camundaAPI
     // send query requests
     utils.get(influxUrl).then(function (res) {
       var result = handleData(res);
+      console.log(result);
       var equipmentUrl = result[0];
       var equipEndp = result[1];
       utils.get(equipmentUrl).then(function (res) {
