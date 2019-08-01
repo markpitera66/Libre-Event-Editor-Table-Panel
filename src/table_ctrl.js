@@ -334,10 +334,10 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
     
-
-    if(record.complete !== null || record.complete !== undefined) {
-      line += 'complete=' + record.complete + ','
-    }
+    console.log(record.complete)
+    // if(record.complete !== null || record.complete !== undefined) {
+    //   line += 'complete=' + record.complete + ','
+    // }
 
     if (record.status !== null && record.status !== undefined) {
       line += 'status="' + record.status + '"' + ','
@@ -376,10 +376,11 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'idle=' + record.idle + ','
     line += 'execute=' + record.execute + ','
     line += 'held=' + record.held + ','
-    
-    if(record.complete !== null || record.complete !== undefined) {
-      line += 'complete=' + record.complete + ','
-    }
+
+    console.log(record.complete)
+    // if(record.complete !== null || record.complete !== undefined) {
+    //   line += 'complete=' + record.complete + ','
+    // }
 
     if (record.status !== null && record.status !== undefined) {
       line += 'status="' + record.status + '"' + ','
