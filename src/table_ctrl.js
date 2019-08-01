@@ -284,7 +284,8 @@ export class TableCtrl extends MetricsPanelCtrl {
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
         return
       } 
-      if(!res.results[0].series[0].columns.includes('parentReason')){
+      console.log(res)
+      if(!res.results[0].series[0].columns.includes('held')){
         this.panel.measurementOK = false
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
         return
