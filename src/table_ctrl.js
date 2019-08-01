@@ -352,7 +352,8 @@ export class TableCtrl extends MetricsPanelCtrl {
     line += 'duration="' + duration + '"' + ' '
     
     line += record.time * 1000000
-  
+    
+    console.log('line1' , line)
     return line
   }
 
@@ -393,6 +394,8 @@ export class TableCtrl extends MetricsPanelCtrl {
     
     line += record.time * 1000000
   
+    console.log('line2' , line)
+
     return line
   }
 

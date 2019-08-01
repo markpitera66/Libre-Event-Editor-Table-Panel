@@ -461,6 +461,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 
             line += record.time * 1000000;
 
+            console.log('line1', line);
             return line;
           }
         }, {
@@ -501,6 +502,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             }
 
             line += record.time * 1000000;
+
+            console.log('line2', line);
 
             return line;
           }
