@@ -68,8 +68,27 @@ function writeInfluxLine (category, parentReason, reason, comment, timestamp, eq
   line += 'idle=' + rowData.idle + ','
   line += 'execute=' + rowData.execute + ','
   line += 'held=' + rowData.held + ','
-  line += 'complete=' + rowData.complete + ','
-  line += 'status="' + rowData.status + '"' + ','
+
+  console.log(rowData)
+  // if(rowData.complete !== null || rowData.complete !== undefined) {
+  //   line += 'complete=' + rowData.complete + ','
+  // }
+
+  if (rowData.status !== null && rowData.status !== undefined) {
+    line += 'status="' + rowData.status + '"' + ','
+  }
+
+  if (rowData.machinestate !== null && rowData.machinestate !== undefined) {
+    line += 'MachineState="' + rowData.machinestate + '"' + ','
+  }
+
+  if (rowData.actual_rate !== null && rowData.actual_rate !== undefined) {
+    line += 'actual_rate=' + rowData.actual_rate + ','
+  }
+
+  if (rowData.rid_1 !== null && rowData.rid_1 !== undefined) {
+    line += 'rid_1="' + rowData.rid_1 + '"' + ','
+  }
 
   if (rowData.duration !== null && rowData.duration !== undefined) {
     line += 'duration="' + rowData.duration + '"' + ','
