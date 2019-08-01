@@ -459,8 +459,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               line += 'status="' + record.status + '"' + ',';
             }
 
-            if (record.MachineState !== null && record.MachineState !== undefined) {
-              line += 'MachineState="' + record.MachineState + '"' + ',';
+            if (record.machinestate !== null && record.machinestate !== undefined) {
+              line += 'MachineState="' + record.machinestate + '"' + ',';
             }
 
             if (record.actual_rate !== null && record.actual_rate !== undefined) {
@@ -468,7 +468,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             }
 
             if (record.rid !== null && record.rid !== undefined) {
-              line += 'rid="' + record.rid + '"' + ',';
+              line += 'rid_1="' + record.rid + '"' + ',';
             }
 
             if (record.MachineState !== null && record.MachineState !== undefined) {

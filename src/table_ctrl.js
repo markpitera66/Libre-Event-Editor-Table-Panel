@@ -351,8 +351,8 @@ export class TableCtrl extends MetricsPanelCtrl {
       line += 'status="' + record.status + '"' + ','
     }
 
-    if (record.MachineState !== null && record.MachineState !== undefined) {
-      line += 'MachineState="' + record.MachineState + '"' + ','
+    if (record.machinestate !== null && record.machinestate !== undefined) {
+      line += 'MachineState="' + record.machinestate + '"' + ','
     }
 
     if (record.actual_rate !== null && record.actual_rate !== undefined) {
@@ -360,7 +360,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     }
 
     if (record.rid !== null && record.rid !== undefined) {
-      line += 'rid="' + record.rid + '"' + ','
+      line += 'rid_1="' + record.rid + '"' + ','
     }
 
     if (record.MachineState !== null && record.MachineState !== undefined) {
