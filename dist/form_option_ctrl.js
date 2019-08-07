@@ -45,7 +45,6 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
 
           this.panelCtrl = ctrl;
           this.currentEvent = { timestamp: timestamp };
-          this.nextEvent = { record: null };
           this.equipment = { data: null, datalist: null };
           this.reasonCodes = { data: null, categories: null, reasons: null, parentChildren: null };
         }
@@ -64,7 +63,7 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
           value: async function hasQueryData() {
             var measurement = this.panelCtrl.panel.endPoint;
             var timestamp = this.currentEvent.timestamp;
-            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + measurement + ' where time >= ' + timestamp + ' limit 2');
+            var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + measurement + ' where time = ' + timestamp);
             var measurementResult = await utils.sure(utils.get(influxUrl));
             if (!this.isResultOK(measurementResult, 'influxdb - ' + measurement)) {
               return false;
@@ -142,7 +141,6 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
             }
 
             this.currentEvent.record = data[0];
-            this.nextEvent.record = data[1] || null;
           }
         }, {
           key: 'isResultOK',

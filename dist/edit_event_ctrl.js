@@ -59,7 +59,6 @@ System.register(['./utils', './instant_search_ctrl', './influxAPI', './split_eve
           value: function init(ctrl) {
             this.panelCtrl = ctrl.panelCtrl;
             this.currentEvent = ctrl.currentEvent;
-            this.nextEvent = ctrl.nextEvent;
             this.equipment = ctrl.equipment;
             this.reasonCodes = ctrl.reasonCodes;
             this.reasonCodes.currentReasons = [];

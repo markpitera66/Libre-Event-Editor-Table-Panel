@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['./utils', './influxAPI', './libs/bootstrap-slider'], function (_export, _context) {
+System.register(['./utils', './influxAPI', 'moment', './libs/bootstrap-slider'], function (_export, _context) {
   "use strict";
 
-  var utils, influx, slider, _createClass, SplitEventCtrl;
+  var utils, influx, moment, slider, _createClass, SplitEventCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -16,6 +16,8 @@ System.register(['./utils', './influxAPI', './libs/bootstrap-slider'], function 
       utils = _utils;
     }, function (_influxAPI) {
       influx = _influxAPI;
+    }, function (_moment) {
+      moment = _moment.default;
     }, function (_libsBootstrapSlider) {
       slider = _libsBootstrapSlider.default;
     }],
@@ -52,7 +54,6 @@ System.register(['./utils', './influxAPI', './libs/bootstrap-slider'], function 
           value: function init(ctrl) {
             this.panelCtrl = ctrl.panelCtrl;
             this.currentEvent = ctrl.currentEvent;
-            this.nextEvent = ctrl.nextEvent;
             this.editForm = ctrl.editForm;
             this.splitForm = {
               meta: {
@@ -68,7 +69,7 @@ System.register(['./utils', './influxAPI', './libs/bootstrap-slider'], function 
           key: 'prepare',
           value: function prepare() {
             this.splitForm.min = new Date(this.currentEvent.record.time).getTime();
-            this.splitForm.max = this.nextEvent.record ? new Date(this.nextEvent.record.time).getTime() : new Date().getTime();
+            this.splitForm.max = moment(this.splitForm.min).add(moment.duration(this.currentEvent.record.durationint)).valueOf();
             this.splitForm.value = this.splitForm.min + (this.splitForm.max - this.splitForm.min) / 2;
             this.splitForm.splitInput = this.getDateTime(this.splitForm.value);
             this.splitForm.targetTime = this.getDateTime(this.splitForm.min);

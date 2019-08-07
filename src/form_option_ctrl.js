@@ -7,7 +7,6 @@ export class FormOptionCtrl {
   constructor(ctrl, timestamp) {
     this.panelCtrl = ctrl;
     this.currentEvent = { timestamp }
-    this.nextEvent = { record: null }
     this.equipment = { data: null, datalist: null }
     this.reasonCodes = { data: null, categories: null, reasons: null, parentChildren: null}
   }
@@ -21,7 +20,7 @@ export class FormOptionCtrl {
   async hasQueryData() {
     const measurement = this.panelCtrl.panel.endPoint
     const timestamp = this.currentEvent.timestamp
-    const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${measurement} where time >= ${timestamp} limit 2`
+    const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${measurement} where time = ${timestamp}`
     const measurementResult = await utils.sure(utils.get(influxUrl))
     if (!this.isResultOK(measurementResult, `influxdb - ${measurement}`)) { return false }
     if (!this.isMeasureDataOK(measurementResult, `influxdb - ${measurement}`)) { return false }
@@ -81,7 +80,6 @@ export class FormOptionCtrl {
     }
     
     this.currentEvent.record = data[0]
-    this.nextEvent.record = data[1] || null
   }
 
   isResultOK(result, source) {

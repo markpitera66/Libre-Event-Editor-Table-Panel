@@ -18,7 +18,6 @@ export class EditEventCtrl {
   init(ctrl) {
     this.panelCtrl = ctrl.panelCtrl;
     this.currentEvent = ctrl.currentEvent
-    this.nextEvent = ctrl.nextEvent
     this.equipment = ctrl.equipment
     this.reasonCodes = ctrl.reasonCodes
     this.reasonCodes.currentReasons = []

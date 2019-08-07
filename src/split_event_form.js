@@ -1,5 +1,6 @@
 import * as utils from './utils'
 import * as influx from './influxAPI'
+import moment from 'moment'
 import slider from './libs/bootstrap-slider'
 
 
@@ -13,7 +14,6 @@ export class SplitEventCtrl {
   init(ctrl) {
     this.panelCtrl = ctrl.panelCtrl;
     this.currentEvent = ctrl.currentEvent
-    this.nextEvent = ctrl.nextEvent
     this.editForm = ctrl.editForm
     this.splitForm = {
       meta: {
@@ -28,7 +28,7 @@ export class SplitEventCtrl {
 
   prepare() {
     this.splitForm.min = new Date(this.currentEvent.record.time).getTime()
-    this.splitForm.max = this.nextEvent.record? new Date(this.nextEvent.record.time).getTime() : new Date().getTime()
+    this.splitForm.max = moment(this.splitForm.min).add(moment.duration(this.currentEvent.record.durationint)).valueOf()
     this.splitForm.value = this.splitForm.min + (this.splitForm.max - this.splitForm.min) / 2
     this.splitForm.splitInput = this.getDateTime(this.splitForm.value)
     this.splitForm.targetTime = this.getDateTime(this.splitForm.min)
