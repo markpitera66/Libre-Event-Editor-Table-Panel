@@ -32,7 +32,8 @@ System.register(['./utils'], function (_export, _context) {
         });
       };
 
-      _export('postMsg', postMsg = function postMsg(data) {
+      _export('postMsg', postMsg = async function postMsg(data) {
+
         var line = data.site + ' | ' + data.area + ' | ' + data.line;
         var toSend = {
           messageName: "maintenanceRequest",
@@ -42,11 +43,7 @@ System.register(['./utils'], function (_export, _context) {
           }
         };
 
-        post(utils.camundaRestApi, 'message', JSON.stringify(toSend)).then(function (res) {
-          utils.alert('success', 'Successful', 'Maintenance request has been successfully sent');
-        }).catch(function (e) {
-          utils.alert('error', 'Error', "Maintenance request hasn't been sent due to '" + e + "', please try agian");
-        });
+        return await utils.sure(post(utils.camundaRestApi, 'message', JSON.stringify(toSend)));
       });
 
       _export('postMsg', postMsg);

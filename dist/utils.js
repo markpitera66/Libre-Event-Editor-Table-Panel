@@ -3,7 +3,7 @@
 System.register(['app/core/core'], function (_export, _context) {
   "use strict";
 
-  var appEvents, hostname, http, postgRestHost, influxHost, tasklistHostName, camundaHost, camundaRestApi, get, post, addSlash, alert;
+  var appEvents, hostname, http, postgRestHost, influxHost, influxDBName, tasklistHostName, camundaHost, camundaRestApi, get, post, addSlash, alert, showModal, isValidVal, sure;
   return {
     setters: [function (_appCoreCore) {
       appEvents = _appCoreCore.appEvents;
@@ -19,6 +19,10 @@ System.register(['app/core/core'], function (_export, _context) {
       _export('influxHost', influxHost = http + hostname + ':8086/');
 
       _export('influxHost', influxHost);
+
+      _export('influxDBName', influxDBName = 'smart_factory');
+
+      _export('influxDBName', influxDBName);
 
       tasklistHostName = hostname;
 
@@ -89,8 +93,8 @@ System.register(['app/core/core'], function (_export, _context) {
 
       _export('post', post);
 
-      _export('addSlash', addSlash = function addSlash(target, key) {
-        return target.split(key).join('\\' + key);
+      _export('addSlash', addSlash = function addSlash(target) {
+        return target.split(' ').join('\\ ');
       });
 
       _export('addSlash', addSlash);
@@ -100,6 +104,32 @@ System.register(['app/core/core'], function (_export, _context) {
       });
 
       _export('alert', alert);
+
+      _export('showModal', showModal = function showModal(html, data, mClass) {
+        appEvents.emit('show-modal', {
+          src: 'public/plugins/smart-factory-event-editor-table-panel/partials/' + html,
+          modalClass: mClass || 'confirm-modal',
+          model: data
+        });
+      });
+
+      _export('showModal', showModal);
+
+      _export('isValidVal', isValidVal = function isValidVal(val) {
+        return val !== null && val !== undefined && val !== '';
+      });
+
+      _export('isValidVal', isValidVal);
+
+      _export('sure', sure = function sure(promise) {
+        return promise.then(function (data) {
+          return { ok: true, data: data };
+        }).catch(function (error) {
+          return Promise.resolve({ ok: false, error: error });
+        });
+      });
+
+      _export('sure', sure);
     }
   };
 });

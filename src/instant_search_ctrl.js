@@ -6,20 +6,12 @@ import {DataList} from './datalist'
  * @param {*} products 
  * @param {*} equipment 
  */
-function enableInstantSearch (equipment) {
-  
-//   equipment = equipment.filter(data => data.production_line !== null && data.equipment === null)
+function enableInstantSearch (equipmentData, divkey, inputkey, ulkey) {
 
-  const equipmentData = equipment.reduce((arr, equip) => {
-    const obj = {value: equip, text: equip.production_line + ' | ' + equip.equipment}
-    arr.push(obj)
-    return arr
-  }, [])
-  
   const equipmentDataList = new DataList(
-    "eet-datalist-equipment",
-    "eet-datalist-input-equipment",
-    "eet-datalist-ul-equipment",
+    divkey,
+    inputkey,
+    ulkey,
     equipmentData
   );
 

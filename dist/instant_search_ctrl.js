@@ -12,17 +12,9 @@ System.register(['./datalist'], function (_export, _context) {
    * @param {*} products 
    * @param {*} equipment 
    */
-  function enableInstantSearch(equipment) {
+  function enableInstantSearch(equipmentData, divkey, inputkey, ulkey) {
 
-    //   equipment = equipment.filter(data => data.production_line !== null && data.equipment === null)
-
-    var equipmentData = equipment.reduce(function (arr, equip) {
-      var obj = { value: equip, text: equip.production_line + ' | ' + equip.equipment };
-      arr.push(obj);
-      return arr;
-    }, []);
-
-    var equipmentDataList = new DataList("eet-datalist-equipment", "eet-datalist-input-equipment", "eet-datalist-ul-equipment", equipmentData);
+    var equipmentDataList = new DataList(divkey, inputkey, ulkey, equipmentData);
 
     equipmentDataList.create();
     equipmentDataList.removeListeners();

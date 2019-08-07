@@ -21,7 +21,8 @@ const post = (url, param, json) => {
   })
 }
 
-export const postMsg = data => {
+export const postMsg = async data => {
+  
   const line = data.site + ' | ' + data.area + ' | ' + data.line
   const toSend = {
     messageName : "maintenanceRequest",
@@ -31,9 +32,5 @@ export const postMsg = data => {
     }
   }
 
-  post(utils.camundaRestApi, 'message', JSON.stringify(toSend)).then(res => {
-    utils.alert('success', 'Successful', 'Maintenance request has been successfully sent')
-  }).catch(e => {
-    utils.alert('error', 'Error', "Maintenance request hasn't been sent due to '" + e + "', please try agian")
-  })
+  return await utils.sure(post(utils.camundaRestApi, 'message', JSON.stringify(toSend)))
 }

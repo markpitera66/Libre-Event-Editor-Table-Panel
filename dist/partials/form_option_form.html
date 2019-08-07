@@ -10,7 +10,7 @@
     </a>
   </div>
 
-  <form class="form" name="event-editor-form" id="">
+  <form class="form" name="event-editor-form">
     <div
       class="modal-content"
       id="modal-modal-content"
@@ -19,18 +19,18 @@
       <div class="text-center">
         <div class="radio-tile-group">
           <!-- Edit -->
-          <div class="input-container">
-            <input id="edit" class="radio-button" type="radio" name="edit-maintain-radio" />
+          <div class="input-container" ng-click="model.onEditClick()">
+            <input class="radio-button" type="radio" name="edit-maintain-radio" />
             <div class="radio-tile">
                 <div class="icon edit-icon">
                 <i class="fa fa-edit fa-2x"></i>
                 </div>
-                <label for="edit" class="radio-tile-label">Edit</label>
+                <label class="radio-tile-label">Edit</label>
             </div>
           </div>
           <!-- Maintain -->
-          <div class="input-container">
-              <input id="maintain" class="radio-button" type="radio" name="edit-maintain-radio" />
+          <div class="input-container" ng-click="model.onMaintainClick()">
+              <input class="radio-button" type="radio" name="edit-maintain-radio" />
               <div class="radio-tile">
                   <div class="icon split-icon">
                   <i class="fa fa-arrows-h fa-2x"></i>

@@ -1,4 +1,4 @@
-<div class="modal-body" id="" style="">
+<div class="modal-body">
   <div class="modal-header">
     <h2 class="modal-header-title">
       <i class="fa fa-info-circle"></i>
@@ -18,25 +18,84 @@
     >
       <div class="text-center">
 
-        <!-- comment -->
-        <textarea
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Line:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.lineCombined" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Equipment:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.equipment" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Status:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.status" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Category:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.category" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Reason:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.reason" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Time of Occurrence:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.time" readonly>
+        </div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic">Duration:</label>
+          <input class="eet-datalist-input col-lg-7 col-md-7 col-sm-7 col-xs-7" ng-model="model.form.duration" readonly>
+        </div>
+
+        <div ng-if="model.form.eventComment" class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic; align-self: center">Event Comment:</label>
+          <textarea
+          class="col-lg-7 col-md-7 col-sm-7 col-xs-7"
           type="textarea"
           rows="3"
-          style="margin-top: 30px; width: 100%; border: solid .1px lightgray; resize: none"
-          name="requestComment"
-          placeholder="Comment: (Maximun 250 Characters)"
-          maxlength="250"
-          id="edit-maintenance-request-text"
-        ></textarea>
+          style="width: 100%; border: solid 1px lightgray; resize: none; border-radius: 5px"
+          maxlength="255"
+          ng-model="model.form.eventComment"
+          readonly
+          ></textarea>
+        </div>
+
         <!-- comment -->
 
+        <div class="custom-separator" style="margin-top:30px"></div>
+
+        <div class="row form-group eet-datalist" style="margin-bottom: 10px; width: 100%">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 7px; font-style: italic; align-self: center">Request Comment:</label>
+          <textarea
+          class="col-lg-7 col-md-7 col-sm-7 col-xs-7"
+          type="textarea"
+          rows="3"
+          style="width: 100%; border: solid 1px lightgray; resize: none; border-radius: 5px"
+          placeholder="Comment: (Maximun 250 Characters)"
+          maxlength="255"
+          ng-model="model.form.requestComment"
+          ></textarea>
+        </div>
+
+        <!-- end-comment -->
+
         <button
-        id="event-editor-form-maintenance-request-sendBtn"
-        type="button"
-        class="btn btn-success"
-        style="width:9rem; margin-top: 5px"
+          type="button"
+          class="btn btn-success"
+          style="width:9rem; margin-top: 5px"
+          ng-click="model.onSend()"
         >
-          Send
+          <span style="font-size: 1.1em">{{model.form.sendBtnMsg}}</span>
+          <span style="font-size: 1.1em; color: #ffffff" ng-if="model.form.meta.isSending">
+            <span class="fa fa-refresh fa-refresh-animate" 
+            style="margin-right: 10px; margin-bottom: 2px"></span>
+          </span>
         </button>
 
       </div>

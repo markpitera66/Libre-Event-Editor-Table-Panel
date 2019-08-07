@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'app/plugins/sdk', './transformers', './form_ctrl', './utils', './editor', './column_options', './renderer', './css/style.css!', './css/bootstrap-slider.css!', './css/instant-search.css!'], function (_export, _context) {
+System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'app/plugins/sdk', './transformers', './utils', './editor', './column_options', './renderer', './form_option_ctrl', './css/style.css!', './css/bootstrap-slider.css!', './css/instant-search.css!'], function (_export, _context) {
   "use strict";
 
-  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, showForm, utils, tablePanelEditor, columnOptionsTab, TableRenderer, _createClass, _get, timestamp, _ctrl, panelDefaults, TableCtrl, refreshPanel, getQueryMeasurement, getReasonCodeEndPoint, getEquipmentEndPoint, isReadyToWriteInData;
+  var _, $, moment, FileExport, MetricsPanelCtrl, transformDataToTable, utils, tablePanelEditor, columnOptionsTab, TableRenderer, FormOptionCtrl, _createClass, _get, _ctrl, panelDefaults, TableCtrl, refreshPanel, getQueryMeasurement, getReasonCodeEndPoint, getEquipmentEndPoint, isReadyToWriteInData;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -48,8 +48,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_transformers) {
       transformDataToTable = _transformers.transformDataToTable;
-    }, function (_form_ctrl) {
-      showForm = _form_ctrl.showForm;
     }, function (_utils) {
       utils = _utils;
     }, function (_editor) {
@@ -58,6 +56,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
       columnOptionsTab = _column_options.columnOptionsTab;
     }, function (_renderer) {
       TableRenderer = _renderer.TableRenderer;
+    }, function (_form_option_ctrl) {
+      FormOptionCtrl = _form_option_ctrl.FormOptionCtrl;
     }, function (_cssStyleCss) {}, function (_cssBootstrapSliderCss) {}, function (_cssInstantSearchCss) {}],
     execute: function () {
       _createClass = function () {
@@ -103,7 +103,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }
       };
 
-      timestamp = void 0;
       _ctrl = void 0;
       panelDefaults = {
         targets: [{}],
@@ -114,7 +113,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           type: 'date',
           pattern: 'Time',
           alias: 'Time',
-          dateFormat: 'YYYY-MM-DD HH:mm:ss',
+          dateFormat: 'YYYY-MM-DD HH:mm:ss.SSS',
           headerColor: "rgba(51, 181, 229, 1)"
         }, {
           unit: 'short',
@@ -131,7 +130,11 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         scroll: true,
         fontSize: '100%',
         sort: { col: 0, desc: true },
-        durationFilter: 3
+        durationFilter: 3,
+        hideExecute: true,
+        reasonCodeEndPoint: 'reason_code',
+        equipmentEndPoint: 'equipment',
+        endPoint: 'Availability'
       };
 
       _export('TableCtrl', TableCtrl = function (_MetricsPanelCtrl) {
@@ -143,7 +146,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           var _this = _possibleConstructorReturn(this, (TableCtrl.__proto__ || Object.getPrototypeOf(TableCtrl)).call(this, $scope, $injector));
 
           _this.pageIndex = 0;
-          _ctrl = _this;
 
           if (_this.panel.styles === void 0) {
             _this.panel.styles = _this.panel.columns;
@@ -177,14 +179,14 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
               }
             });
 
-            var timeIndex = $scope.ctrl.colDimensions.indexOf("Time");
+            var timeIndex = $scope.ctrl.colDimensions.indexOf("time");
             if (!~timeIndex) {
               utils.alert('error', 'Error', 'Get not get this event from the database because TIME NOT FOUND, please contact the dev team, or try to NOT hide the time column');
               return;
             } else {
-              var date = rawData[0];
-              timestamp = moment(date).valueOf() * 1000000;
-              showForm(timestamp);
+              var date = rawData[timeIndex];
+              var timestamp = moment(date).valueOf() * 1000000;
+              new FormOptionCtrl($scope.ctrl, timestamp).show();
             }
           });
 
@@ -324,7 +326,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 if (cols.indexOf('duration') !== -1) {
                   //contains duration, continue
                   var allRecords = this.getRecords(cols, data.rows);
-                  console.log(allRecords);
+                  // console.log(allRecords)
                   var allTimestamps = allRecords.reduce(function (arr, record) {
                     var timestamp = record.time;
                     arr.push(timestamp);
@@ -344,13 +346,13 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     // console.log('update newest one')
                   }
                   recordsToUpdate.forEach(function (record) {
-                    console.log(allTimestamps);
-                    console.log(record.time);
-                    console.log(allTimestamps.indexOf(record.time));
+                    // console.log(allTimestamps)
+                    // console.log(record.time)
+                    // console.log(allTimestamps.indexOf(record.time))
                     if (record.time === allTimestamps[allTimestamps.length - 1]) {
                       //The most updated record, calculate the duration by now()
                       var difference = new Date().getTime() - record.time;
-                      console.log('record time', record.time);
+                      // console.log('record time', record.time)
                       var duration = _this2.getDuration(difference);
                       var line = _this2.getInfluxLine(record, duration, difference);
                       // console.log(record);
@@ -367,7 +369,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     } else {
                       //other records
                       var _difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time;
-                      console.log('record time 2', record.time);
+                      // console.log('record time 2', record.time)
                       var _duration = _this2.getDuration(_difference);
                       var _line = _this2.getInfluxLine(record, _duration, _difference);
                       //   console.log('other updated');
@@ -427,7 +429,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
                 return;
               }
-              console.log(res);
+              // console.log(res)
               if (!res.results[0].series[0].columns.includes('held')) {
                 _this3.panel.measurementOK = false;
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
@@ -444,7 +446,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           key: 'getDuration',
           value: function getDuration(difference) {
 
-            console.log('diff', difference);
+            // console.log('diff', difference)
 
             var milSecs = parseInt(difference % 1000);
 
@@ -470,7 +472,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
           key: 'getInfluxLine',
           value: function getInfluxLine(record, duration, durationInt) {
             if (!this.panel.measurementOK) {
-              console.log('not writing 1');
+              // console.log('not writing 1')
               return;
             }
             var measurement = this.panel.endPoint;
@@ -522,14 +524,14 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 
             line += record.time * 1000000;
 
-            console.log('line1', line);
+            // console.log('line1' , line)
             return line;
           }
         }, {
           key: 'normalInfluxLine',
           value: function normalInfluxLine(record) {
             if (!this.panel.measurementOK) {
-              console.log('not writing');
+              // console.log('not writing')
               return;
             }
             var measurement = this.panel.endPoint;
@@ -579,7 +581,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 
             line += record.time * 1000000;
 
-            console.log('line2', line);
+            // console.log('line2' , line)
 
             return line;
           }
@@ -697,7 +699,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 ctrl.colDimensions = ctrl.table.columns.filter(function (x) {
                   return !x.hidden;
                 }).map(function (x) {
-                  return x.text;
+                  return x.text.toLowerCase();
                 });
               }
             }

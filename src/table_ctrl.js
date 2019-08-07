@@ -4,17 +4,16 @@ import moment from 'moment';
 import * as FileExport from 'app/core/utils/file_export';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import {transformDataToTable} from './transformers';
-import {showForm} from './form_ctrl'
 import * as utils from './utils'
 import {tablePanelEditor} from './editor';
 import {columnOptionsTab} from './column_options';
 import {TableRenderer} from './renderer';
+import {FormOptionCtrl} from './form_option_ctrl'
 
 import './css/style.css!';
 import './css/bootstrap-slider.css!';
 import './css/instant-search.css!';
 
-let timestamp
 let _ctrl
 
 const panelDefaults = {
@@ -27,7 +26,7 @@ const panelDefaults = {
       type: 'date',
       pattern: 'Time',
       alias: 'Time',
-      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      dateFormat: 'YYYY-MM-DD HH:mm:ss.SSS',
       headerColor: "rgba(51, 181, 229, 1)"
     },
     {
@@ -46,7 +45,11 @@ const panelDefaults = {
   scroll: true,
   fontSize: '100%',
   sort: { col: 0, desc: true },
-  durationFilter: 3
+  durationFilter: 3,
+  hideExecute: true,
+  reasonCodeEndPoint: 'reason_code',
+  equipmentEndPoint: 'equipment',
+  endPoint: 'Availability'
 };
 
 export class TableCtrl extends MetricsPanelCtrl {
@@ -55,7 +58,6 @@ export class TableCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
 
     this.pageIndex = 0;
-    _ctrl = this
 
     if (this.panel.styles === void 0) {
       this.panel.styles = this.panel.columns;
@@ -90,14 +92,14 @@ export class TableCtrl extends MetricsPanelCtrl {
 
       })
 
-      const timeIndex = $scope.ctrl.colDimensions.indexOf("Time")
+      const timeIndex = $scope.ctrl.colDimensions.indexOf("time")
       if (!~timeIndex) {
         utils.alert('error', 'Error', 'Get not get this event from the database because TIME NOT FOUND, please contact the dev team, or try to NOT hide the time column')
         return
       }else {
-        let date = rawData[0]
-        timestamp = moment(date).valueOf() * 1000000
-        showForm(timestamp)     
+        const date = rawData[timeIndex]
+        const timestamp = moment(date).valueOf() * 1000000
+        new FormOptionCtrl($scope.ctrl, timestamp).show()
       }
     })
 
@@ -217,7 +219,7 @@ export class TableCtrl extends MetricsPanelCtrl {
         if (cols.indexOf('duration') !== -1) {
           //contains duration, continue
           let allRecords = this.getRecords(cols, data.rows)
-          console.log(allRecords)
+          // console.log(allRecords)
           let allTimestamps = allRecords.reduce((arr, record) => {
             let timestamp = record.time
             arr.push(timestamp)
@@ -235,13 +237,13 @@ export class TableCtrl extends MetricsPanelCtrl {
             // console.log('update newest one')
           }
           recordsToUpdate.forEach(record => {
-            console.log(allTimestamps)
-            console.log(record.time)
-            console.log(allTimestamps.indexOf(record.time))
+            // console.log(allTimestamps)
+            // console.log(record.time)
+            // console.log(allTimestamps.indexOf(record.time))
             if (record.time === allTimestamps[allTimestamps.length - 1]) {
               //The most updated record, calculate the duration by now()
               let difference = new Date().getTime() - record.time
-              console.log('record time', record.time)
+              // console.log('record time', record.time)
               let duration = this.getDuration(difference)
               let line = this.getInfluxLine(record, duration, difference)
               // console.log(record);
@@ -258,7 +260,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             }else {
               //other records
               let difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time
-              console.log('record time 2', record.time)
+              // console.log('record time 2', record.time)
               let duration = this.getDuration(difference)
               let line = this.getInfluxLine(record, duration, difference)
             //   console.log('other updated');
@@ -314,7 +316,7 @@ export class TableCtrl extends MetricsPanelCtrl {
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
         return
       } 
-      console.log(res)
+      // console.log(res)
       if(!res.results[0].series[0].columns.includes('held')){
         this.panel.measurementOK = false
         utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query")
@@ -330,7 +332,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 
   getDuration(difference){
 
-    console.log('diff', difference)
+    // console.log('diff', difference)
 
     const milSecs = parseInt(difference%1000)
 
@@ -355,7 +357,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 
   getInfluxLine(record, duration, durationInt){
     if (!this.panel.measurementOK) {
-      console.log('not writing 1')
+      // console.log('not writing 1')
       return
     }
     const measurement = this.panel.endPoint
@@ -407,13 +409,13 @@ export class TableCtrl extends MetricsPanelCtrl {
     
     line += record.time * 1000000
     
-    console.log('line1' , line)
+    // console.log('line1' , line)
     return line
   }
 
   normalInfluxLine(record){
     if (!this.panel.measurementOK) {
-      console.log('not writing')
+      // console.log('not writing')
       return
     }
     const measurement = this.panel.endPoint
@@ -463,7 +465,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     
     line += record.time * 1000000
   
-    console.log('line2' , line)
+    // console.log('line2' , line)
 
     return line
   }
@@ -583,7 +585,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 
       // get current table column dimensions 
       if (ctrl.table.columns) {
-        ctrl.colDimensions = ctrl.table.columns.filter(x => !x.hidden).map(x => x.text)
+        ctrl.colDimensions = ctrl.table.columns.filter(x => !x.hidden).map(x => x.text.toLowerCase())
       }
     }
 

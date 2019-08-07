@@ -4,6 +4,7 @@ const hostname = window.location.hostname
 const http = "http://"
 export const postgRestHost = http + hostname + ':5436/'
 export const influxHost = http + hostname + ':8086/'
+export const influxDBName = 'smart_factory'
 
 let tasklistHostName = hostname
 if (tasklistHostName === 'localhost') {
@@ -59,10 +60,27 @@ export const post = (url, line) => {
   })
 }
 
-export const addSlash = (target, key) => {
-  return target.split(key).join(`\\${key}`)
+export const addSlash = (target) => {
+  return target.split(' ').join(`\\ `)
 }
 
 export const alert = (type, title, msg) => {
   appEvents.emit('alert-' + type, [title, msg])
 }
+
+export const showModal = (html, data, mClass) => {
+  appEvents.emit('show-modal', {
+    src: 'public/plugins/smart-factory-event-editor-table-panel/partials/' + html,
+    modalClass: mClass || 'confirm-modal',
+    model: data
+  })
+}
+
+export const isValidVal = val => {
+  return val !== null && val !== undefined && val !== ''
+}
+
+export const sure = promise => 
+  promise
+  .then(data => ({ok: true, data}))
+  .catch(error => Promise.resolve({ok: false, error}));
