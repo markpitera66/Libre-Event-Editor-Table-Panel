@@ -14,7 +14,8 @@ export class FormOptionCtrl {
   async show() {
     const hasQueryData = await this.hasQueryData()
     if (!hasQueryData) { return }
-    utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal')
+    // utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal')
+    new EditEventCtrl(this).show()
   }
 
   async hasQueryData() {

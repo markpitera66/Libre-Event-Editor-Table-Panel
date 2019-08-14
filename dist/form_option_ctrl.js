@@ -56,7 +56,8 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
             if (!hasQueryData) {
               return;
             }
-            utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal');
+            // utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal')
+            new EditEventCtrl(this).show();
           }
         }, {
           key: 'hasQueryData',
