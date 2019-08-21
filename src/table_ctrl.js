@@ -280,7 +280,7 @@ export class TableCtrl extends MetricsPanelCtrl {
         }else {
           //There is no column name duration
           if (!this.durationMissingErrorLogged){
-            console.log('To calculate the duration of each event, the column name must be named as duration, both upper and lower cases would work')
+            console.log('To calculate the duration of each event, the column name must be named as duration')
           }
           this.durationMissingErrorLogged = true
         }
