@@ -314,84 +314,35 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }, {
           key: 'handle',
           value: function handle(data) {
-            var _this2 = this;
-
             if (data !== undefined) {
               if (data.type === 'table') {
-                var cols = data.columns.reduce(function (arr, col) {
-                  var text = col.text.toLowerCase();
-                  arr.push(text);
-                  return arr;
-                }, []);
-                if (cols.indexOf('duration') !== -1) {
-                  //contains duration, continue
-                  var allRecords = this.getRecords(cols, data.rows);
-                  // console.log(allRecords)
-                  var allTimestamps = allRecords.reduce(function (arr, record) {
-                    var timestamp = record.time;
-                    arr.push(timestamp);
-                    return arr;
-                  }, []);
-                  //only works for ones that are with duration === null
-                  var recordsToUpdate = allRecords.filter(function (record) {
-                    return record.duration === null || record.duration === undefined;
-                  });
-                  if (recordsToUpdate.length === 0) {
-                    //The newest records must be updated no matter what, push it to the list
-                    recordsToUpdate.push(allRecords[allRecords.length - 1]);
+
+                this.allData = this.parseData(data.columns, data.rows);
+
+                var _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
+
+                data.columns.splice(1, 0, { text: 'Duration' });
+
+                var _prevTime = null;
+                for (var i = data.rows.length - 1; i >= 0; i--) {
+                  var row = data.rows[i];
+                  if (i === data.rows.length - 1) {
+                    // first one
+                    var diff = _to.diff(moment(row[0]));
+                    var duration = moment.duration(diff);
+                    var format = this.getDuration(diff);
+                    data.rows[i].splice(1, 0, format);
+                    this.allData[i].duration = duration;
+                    this.allData[i].durationFormat = format;
+                  } else {
+                    var _diff = _prevTime.diff(row[0]);
+                    var _duration = moment.duration(_diff);
+                    var _format = this.getDuration(_diff);
+                    data.rows[i].splice(1, 0, _format);
+                    this.allData[i].duration = _duration;
+                    this.allData[i].durationFormat = _format;
                   }
-                  if (recordsToUpdate[recordsToUpdate.length - 1].time !== allRecords[allRecords.length - 1].time) {
-                    //The newest records must be updated no matter what, push it to the list
-                    recordsToUpdate.push(allRecords[allRecords.length - 1]);
-                    // console.log('update newest one')
-                  }
-                  recordsToUpdate.forEach(function (record) {
-                    // console.log(allTimestamps)
-                    // console.log(record.time)
-                    // console.log(allTimestamps.indexOf(record.time))
-                    if (record.time === allTimestamps[allTimestamps.length - 1]) {
-                      //The most updated record, calculate the duration by now()
-                      var difference = new Date().getTime() - record.time;
-                      // console.log('record time', record.time)
-                      var duration = _this2.getDuration(difference);
-                      var line = _this2.getInfluxLine(record, duration, difference);
-                      // console.log(record);
-                      var url = utils.influxHost + 'write?db=smart_factory';
-                      utils.post(url, line).then(function (res) {
-                        // console.log(res)
-                      }).catch(function (e) {
-                        console.log(e);
-                        if (!_this2.postgresConnectionErrorLogged) {
-                          utils.alert('error', 'Error', 'Unexpected error occurred while connection to the influx database');
-                        }
-                        _this2.postgresConnectionErrorLogged = true;
-                      });
-                    } else {
-                      //other records
-                      var _difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time;
-                      // console.log('record time 2', record.time)
-                      var _duration = _this2.getDuration(_difference);
-                      var _line = _this2.getInfluxLine(record, _duration, _difference);
-                      //   console.log('other updated');
-                      //   console.log(line);
-                      var _url = utils.influxHost + 'write?db=smart_factory';
-                      utils.post(_url, _line).then(function (res) {
-                        // console.log(res)
-                      }).catch(function (e) {
-                        console.log(e);
-                        if (!_this2.postgresConnectionErrorLogged) {
-                          utils.alert('error', 'Error', 'Unexpected error occurred while connection to the influx database');
-                        }
-                        _this2.postgresConnectionErrorLogged = true;
-                      });
-                    }
-                  });
-                } else {
-                  //There is no column name duration
-                  if (!this.durationMissingErrorLogged) {
-                    console.log('To calculate the duration of each event, the column name must be named as duration');
-                  }
-                  this.durationMissingErrorLogged = true;
+                  _prevTime = moment(row[0]);
                 }
               } else {
                 //The table format is not TABLE
@@ -401,6 +352,22 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 this.errorLogged = true;
               }
             }
+          }
+        }, {
+          key: 'parseData',
+          value: function parseData(cols, rows) {
+            cols = cols.map(function (x) {
+              return x.text.toLowerCase();
+            });
+            var data = [];
+            for (var i = 0; i < rows.length; i++) {
+              var row = {};
+              for (var k = 0; k < cols.length; k++) {
+                row[cols[k]] = rows[i][k];
+              }
+              data.push(row);
+            }
+            return data;
           }
         }, {
           key: 'getRecords',
@@ -420,24 +387,24 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }, {
           key: 'checkEndPoint',
           value: function checkEndPoint(key) {
-            var _this3 = this;
+            var _this2 = this;
 
             var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key + ' limit 1');
             utils.get(influxUrl).then(function (res) {
               if (!res.results[0].series) {
-                _this3.panel.measurementOK = false;
+                _this2.panel.measurementOK = false;
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
                 return;
               }
               // console.log(res)
               if (!res.results[0].series[0].columns.includes('held')) {
-                _this3.panel.measurementOK = false;
+                _this2.panel.measurementOK = false;
                 utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
                 return;
               }
-              _this3.panel.measurementOK = true;
+              _this2.panel.measurementOK = true;
             }).catch(function () {
-              _this3.panel.measurementOK = false;
+              _this2.panel.measurementOK = false;
               utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
               return;
             });
@@ -445,8 +412,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
         }, {
           key: 'getDuration',
           value: function getDuration(difference) {
-
-            // console.log('diff', difference)
 
             var milSecs = parseInt(difference % 1000);
 

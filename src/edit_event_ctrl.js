@@ -40,7 +40,7 @@ export class EditEventCtrl {
 
   prepare() {
     const record = this.currentEvent.record
-
+    console.log('rec', record)
     // if there is category but not reason
     if(utils.isValidVal(record.category)){
       this.reasonCodes.currentReasons.push(this.findReasonsByCategory(record.category))

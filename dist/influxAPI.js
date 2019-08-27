@@ -9,30 +9,6 @@ System.register(['./utils'], function (_export, _context) {
   function isOK(val) {
     return val !== null && val !== undefined && val !== '' && val !== 'No Category' && val !== 'No Reasons';
   }
-
-  function getDuration(diff) {
-
-    var difference = diff / 1000000;
-    var milSecs = parseInt(difference % 1000);
-
-    var daysDiff = Math.floor(difference / 1000 / 60 / 60 / 24);
-    difference -= daysDiff * 1000 * 60 * 60 * 24;
-
-    var hrsDiff = Math.floor(difference / 1000 / 60 / 60);
-    difference -= hrsDiff * 1000 * 60 * 60;
-
-    var minsDiff = ('0' + Math.floor(difference / 1000 / 60)).slice(-2);
-    difference -= minsDiff * 1000 * 60;
-
-    var secsDiff = ('0' + Math.floor(difference / 1000)).slice(-2);
-    difference -= minsDiff * 1000;
-
-    var timeToAdd = daysDiff * 24;
-    hrsDiff = hrsDiff + timeToAdd;
-    hrsDiff = hrsDiff < 10 ? '0' + hrsDiff : hrsDiff;
-
-    return hrsDiff + ':' + minsDiff + ':' + secsDiff + '.' + milSecs;
-  }
   return {
     setters: [function (_utils) {
       utils = _utils;
@@ -105,10 +81,6 @@ System.register(['./utils'], function (_export, _context) {
 
         if (isOK(cur.rid_1)) {
           line += 'rid_1="' + cur.rid_1 + '",';
-        }
-
-        if (isOK(cur.duration)) {
-          line += 'duration="' + cur.duration + '",';
         }
 
         line += isOK(data.comment) ? 'comment="' + data.comment + '",' : 'comment="",';
@@ -186,11 +158,10 @@ System.register(['./utils'], function (_export, _context) {
             }
           }
 
-          var diff = newTimeStamp - oldTimeStamp;
-          var dur = getDuration(diff);
-          line += 'durationInt=' + diff / 1000000 + ',';
-          line += 'duration="' + dur + '" '; // it's the last field in the query, leave a space for the timestamp
-          line += oldTimeStamp;
+          if (line[line.length - 1] === ',') {
+            line = line.substring(0, line.length - 1);
+          }
+          line += ' ' + oldTimeStamp;
         } else {
           // write right line
           if (!form.meta.isSplittingLeft) {
@@ -206,11 +177,10 @@ System.register(['./utils'], function (_export, _context) {
             }
           }
 
-          var _diff = maxTimeStamp - newTimeStamp;
-          var _dur = getDuration(_diff);
-          line += 'durationInt=' + _diff / 1000000 + ',';
-          line += 'duration="' + _dur + '" '; // it's the last field in the query, leave a space for the timestamp
-          line += newTimeStamp;
+          if (line[line.length - 1] === ',') {
+            line = line.substring(0, line.length - 1);
+          }
+          line += ' ' + newTimeStamp;
         }
 
         return line;

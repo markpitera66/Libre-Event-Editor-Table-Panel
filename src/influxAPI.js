@@ -43,9 +43,6 @@ const writeLine = (measurement, current, data) => {
 
   if(isOK(cur.rid_1)){ line += `rid_1="${cur.rid_1}",` }
 
-  if(isOK(cur.duration)){ line += `duration="${cur.duration}",` }
-
-
   line += isOK(data.comment) ? `comment="${data.comment}",` : `comment="",` 
   line += isOK(data.equipment) ? `equipment="${data.equipment}",` : `equipment="",` 
 
@@ -91,11 +88,10 @@ const writeSplitLine = (oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, mea
       if(isOK(cur.reason)){ line += `reason="${cur.reason}",` }
     }
 
-    const diff = newTimeStamp - oldTimeStamp 
-    const dur = getDuration(diff)
-    line += `durationInt=${diff/1000000},`
-    line += `duration="${dur}" ` // it's the last field in the query, leave a space for the timestamp
-    line += oldTimeStamp
+    if(line[line.length-1] === ',') {
+      line = line.substring(0, line.length - 1)
+    }
+    line += ' ' + oldTimeStamp
 
   } else {
     // write right line
@@ -110,11 +106,10 @@ const writeSplitLine = (oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, mea
       }
     }
 
-    const diff = maxTimeStamp - newTimeStamp 
-    const dur = getDuration(diff)
-    line += `durationInt=${diff/1000000},`
-    line += `duration="${dur}" ` // it's the last field in the query, leave a space for the timestamp
-    line += newTimeStamp
+    if(line[line.length-1] === ',') {
+      line = line.substring(0, line.length - 1)
+    }
+    line += ' ' + newTimeStamp
   }
 
   return line
@@ -122,28 +117,4 @@ const writeSplitLine = (oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, mea
 
 function isOK(val) {
   return val !== null && val !== undefined && val !== '' && val !== 'No Category' && val !== 'No Reasons'
-}
-
-function getDuration(diff){
-
-  let difference = diff/1000000
-  const milSecs = parseInt(difference%1000)
-
-  const daysDiff = Math.floor(difference/1000/60/60/24)
-  difference -= daysDiff*1000*60*60*24
-
-  let hrsDiff = Math.floor(difference/1000/60/60)
-  difference -= hrsDiff*1000*60*60
-
-  const minsDiff = ('0' + (Math.floor(difference/1000/60))).slice(-2)
-  difference -= minsDiff*1000*60
-
-  const secsDiff = ('0' + (Math.floor(difference/1000))).slice(-2)
-  difference -= minsDiff*1000
-
-  let timeToAdd = daysDiff * 24
-  hrsDiff = hrsDiff + timeToAdd
-  hrsDiff = (hrsDiff < 10) ? '0' + hrsDiff : hrsDiff
-
-  return hrsDiff + ':' + minsDiff + ':' + secsDiff + '.' + milSecs
 }

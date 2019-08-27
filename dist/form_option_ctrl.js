@@ -45,6 +45,7 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
 
           this.panelCtrl = ctrl;
           this.currentEvent = { timestamp: timestamp };
+          this.allEvents = ctrl.allData;
           this.equipment = { data: null, datalist: null };
           this.reasonCodes = { data: null, categories: null, reasons: null, parentChildren: null };
         }
@@ -73,6 +74,13 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
               return false;
             }
             this.parseData(measurementResult); // make results more structured, and store into cur and next
+
+            try {
+              this.currentEvent.record = this.findCurrentEvent(this.currentEvent);
+            } catch (e) {
+              console.log('e', e);
+              return false;
+            }
 
             var equipmentEndPoint = this.panelCtrl.panel.equipmentEndPoint;
             var equipmentUrl = utils.postgRestHost + (equipmentEndPoint + '?production_line=eq.' + this.currentEvent.record.line + '&equipment=not.is.null');
@@ -142,6 +150,14 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
             }
 
             this.currentEvent.record = data[0];
+          }
+        }, {
+          key: 'findCurrentEvent',
+          value: function findCurrentEvent(current) {
+            var res = this.allEvents.filter(function (x) {
+              return x.time === Math.round(current.timestamp / 1000000);
+            });
+            return res[0];
           }
         }, {
           key: 'isResultOK',

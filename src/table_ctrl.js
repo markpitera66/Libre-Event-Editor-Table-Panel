@@ -211,79 +211,35 @@ export class TableCtrl extends MetricsPanelCtrl {
   handle(data){
     if (data !== undefined) {
       if (data.type === 'table') {
-        let cols = data.columns.reduce((arr, col) => {
-          let text = col.text.toLowerCase()
-          arr.push(text)
-          return arr
-        }, [])
-        if (cols.indexOf('duration') !== -1) {
-          //contains duration, continue
-          let allRecords = this.getRecords(cols, data.rows)
-          // console.log(allRecords)
-          let allTimestamps = allRecords.reduce((arr, record) => {
-            let timestamp = record.time
-            arr.push(timestamp)
-            return arr
-          }, [])
-          //only works for ones that are with duration === null
-          let recordsToUpdate = allRecords.filter(record => record.duration === null || record.duration === undefined)
-          if (recordsToUpdate.length === 0) {
-            //The newest records must be updated no matter what, push it to the list
-            recordsToUpdate.push(allRecords[allRecords.length - 1])
+
+        this.allData = this.parseData(data.columns, data.rows)
+
+        const _to = this.range.to.isAfter(moment()) ? moment() : this.range.to
+
+        data.columns.splice(1, 0, {text: 'Duration'})
+
+        let _prevTime = null
+        for (let i = data.rows.length - 1; i >= 0; i--) {
+          const row = data.rows[i];
+          if (i === data.rows.length - 1) {
+            // first one
+            const diff = _to.diff(moment(row[0]))
+            const duration = moment.duration(diff)
+            const format = this.getDuration(diff)
+            data.rows[i].splice(1, 0, format)
+            this.allData[i].duration = duration
+            this.allData[i].durationFormat = format
+          } else {
+            const diff = _prevTime.diff(row[0])
+            const duration = moment.duration(diff)
+            const format = this.getDuration(diff)
+            data.rows[i].splice(1, 0, format)
+            this.allData[i].duration = duration
+            this.allData[i].durationFormat = format
           }
-          if (recordsToUpdate[recordsToUpdate.length -1].time !== allRecords[allRecords.length - 1].time) {
-            //The newest records must be updated no matter what, push it to the list
-            recordsToUpdate.push(allRecords[allRecords.length - 1])
-            // console.log('update newest one')
-          }
-          recordsToUpdate.forEach(record => {
-            // console.log(allTimestamps)
-            // console.log(record.time)
-            // console.log(allTimestamps.indexOf(record.time))
-            if (record.time === allTimestamps[allTimestamps.length - 1]) {
-              //The most updated record, calculate the duration by now()
-              let difference = new Date().getTime() - record.time
-              // console.log('record time', record.time)
-              let duration = this.getDuration(difference)
-              let line = this.getInfluxLine(record, duration, difference)
-              // console.log(record);
-              let url = utils.influxHost + 'write?db=smart_factory'
-              utils.post(url, line).then(res => {
-                // console.log(res)
-              }).catch(e => {
-                console.log(e)
-                if (!this.postgresConnectionErrorLogged) {
-                    utils.alert('error', 'Error', 'Unexpected error occurred while connection to the influx database')
-                }
-                this.postgresConnectionErrorLogged = true
-              })
-            }else {
-              //other records
-              let difference = allTimestamps[allTimestamps.indexOf(record.time) + 1] - record.time
-              // console.log('record time 2', record.time)
-              let duration = this.getDuration(difference)
-              let line = this.getInfluxLine(record, duration, difference)
-            //   console.log('other updated');
-            //   console.log(line);
-              let url = utils.influxHost + 'write?db=smart_factory'
-              utils.post(url, line).then(res => {
-                // console.log(res)
-              }).catch(e => {
-                console.log(e)
-                if (!this.postgresConnectionErrorLogged) {
-                    utils.alert('error', 'Error', 'Unexpected error occurred while connection to the influx database')
-                }
-                this.postgresConnectionErrorLogged = true
-              })
-            }
-          })
-        }else {
-          //There is no column name duration
-          if (!this.durationMissingErrorLogged){
-            console.log('To calculate the duration of each event, the column name must be named as duration')
-          }
-          this.durationMissingErrorLogged = true
+          _prevTime = moment(row[0])
         }
+
       }else {
         //The table format is not TABLE
         if (!this.errorLogged) {
@@ -292,6 +248,19 @@ export class TableCtrl extends MetricsPanelCtrl {
         this.errorLogged = true
       }
     }
+  }
+
+  parseData(cols, rows){
+    cols = cols.map(x => x.text.toLowerCase())
+    let data = []
+    for (let i = 0; i < rows.length; i++) {
+      let row = {}
+      for (let k = 0; k < cols.length; k++) {
+        row[cols[k]] = rows[i][k]
+      }
+      data.push(row)
+    }
+    return data
   }
 
   getRecords(cols, rows){
@@ -331,8 +300,6 @@ export class TableCtrl extends MetricsPanelCtrl {
   }
 
   getDuration(difference){
-
-    // console.log('diff', difference)
 
     const milSecs = parseInt(difference%1000)
 

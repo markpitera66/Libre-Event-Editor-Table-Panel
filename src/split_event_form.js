@@ -28,7 +28,7 @@ export class SplitEventCtrl {
 
   prepare() {
     this.splitForm.min = new Date(this.currentEvent.record.time).getTime()
-    this.splitForm.max = moment(this.splitForm.min).add(moment.duration(this.currentEvent.record.durationint)).valueOf()
+    this.splitForm.max = moment(this.splitForm.min).add(this.currentEvent.record.duration).valueOf()
     this.splitForm.value = this.splitForm.min + (this.splitForm.max - this.splitForm.min) / 2
     this.splitForm.splitInput = this.getDateTime(this.splitForm.value)
     this.splitForm.targetTime = this.getDateTime(this.splitForm.min)

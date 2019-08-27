@@ -84,3 +84,6 @@ export const sure = promise =>
   promise
   .then(data => ({ok: true, data}))
   .catch(error => Promise.resolve({ok: false, error}));
+
+export const copy = obj => JSON.parse(JSON.stringify(obj))
+  

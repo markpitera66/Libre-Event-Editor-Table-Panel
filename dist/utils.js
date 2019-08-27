@@ -3,7 +3,7 @@
 System.register(['app/core/core'], function (_export, _context) {
   "use strict";
 
-  var appEvents, hostname, http, postgRestHost, influxHost, influxDBName, tasklistHostName, camundaHost, camundaRestApi, get, post, addSlash, alert, showModal, isValidVal, sure;
+  var appEvents, hostname, http, postgRestHost, influxHost, influxDBName, tasklistHostName, camundaHost, camundaRestApi, get, post, addSlash, alert, showModal, isValidVal, sure, copy;
   return {
     setters: [function (_appCoreCore) {
       appEvents = _appCoreCore.appEvents;
@@ -130,6 +130,12 @@ System.register(['app/core/core'], function (_export, _context) {
       });
 
       _export('sure', sure);
+
+      _export('copy', copy = function copy(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      });
+
+      _export('copy', copy);
     }
   };
 });

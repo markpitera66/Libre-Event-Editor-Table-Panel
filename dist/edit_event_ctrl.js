@@ -83,7 +83,7 @@ System.register(['./utils', './instant_search_ctrl', './influxAPI', './split_eve
           key: 'prepare',
           value: function prepare() {
             var record = this.currentEvent.record;
-
+            console.log('rec', record);
             // if there is category but not reason
             if (utils.isValidVal(record.category)) {
               this.reasonCodes.currentReasons.push(this.findReasonsByCategory(record.category));

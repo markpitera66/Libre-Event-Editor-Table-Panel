@@ -7,6 +7,7 @@ export class FormOptionCtrl {
   constructor(ctrl, timestamp) {
     this.panelCtrl = ctrl;
     this.currentEvent = { timestamp }
+    this.allEvents = ctrl.allData
     this.equipment = { data: null, datalist: null }
     this.reasonCodes = { data: null, categories: null, reasons: null, parentChildren: null}
   }
@@ -26,6 +27,13 @@ export class FormOptionCtrl {
     if (!this.isResultOK(measurementResult, `influxdb - ${measurement}`)) { return false }
     if (!this.isMeasureDataOK(measurementResult, `influxdb - ${measurement}`)) { return false }
     this.parseData(measurementResult) // make results more structured, and store into cur and next
+
+    try{
+      this.currentEvent.record = this.findCurrentEvent(this.currentEvent)
+    }catch(e) {
+      console.log('e', e)
+      return false
+    }
 
     const equipmentEndPoint = this.panelCtrl.panel.equipmentEndPoint
     const equipmentUrl = utils.postgRestHost + `${equipmentEndPoint}?production_line=eq.${this.currentEvent.record.line}&equipment=not.is.null`
@@ -81,6 +89,11 @@ export class FormOptionCtrl {
     }
     
     this.currentEvent.record = data[0]
+  }
+
+  findCurrentEvent(current) {
+    const res = this.allEvents.filter(x => x.time === Math.round(current.timestamp / 1000000))
+    return res[0]
   }
 
   isResultOK(result, source) {
