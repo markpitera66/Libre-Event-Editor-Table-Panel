@@ -298,7 +298,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
             var filteredData = void 0;
             if (data[0].columns !== null && data[0].columns !== undefined) {
               var index = data[0].columns.findIndex(function (x) {
-                return x.text.toLowerCase() === 'durationint';
+                return x.text.toLowerCase() === 'durationvalue';
               });
               if (!~index) {
                 return data;
@@ -322,6 +322,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                 var _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
 
                 data.columns.splice(1, 0, { text: 'Duration' });
+                data.columns.splice(2, 0, { text: 'DurationValue' });
 
                 var _prevTime = null;
                 for (var i = data.rows.length - 1; i >= 0; i--) {
@@ -332,6 +333,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     var duration = moment.duration(diff);
                     var format = this.getDuration(diff);
                     data.rows[i].splice(1, 0, format);
+                    data.rows[i].splice(2, 0, duration.valueOf());
                     this.allData[i].duration = duration;
                     this.allData[i].durationFormat = format;
                   } else {
@@ -339,6 +341,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
                     var _duration = moment.duration(_diff);
                     var _format = this.getDuration(_diff);
                     data.rows[i].splice(1, 0, _format);
+                    data.rows[i].splice(2, 0, _duration.valueOf());
                     this.allData[i].duration = _duration;
                     this.allData[i].durationFormat = _format;
                   }

@@ -199,7 +199,7 @@ export class TableCtrl extends MetricsPanelCtrl {
     const minDurVal = moment.duration(minDur, 'minutes').valueOf()
     let filteredData;
     if (data[0].columns !== null && data[0].columns !== undefined) {
-      let index = data[0].columns.findIndex(x => x.text.toLowerCase() === 'durationint')
+      let index = data[0].columns.findIndex(x => x.text.toLowerCase() === 'durationvalue')
       if (!~index) { return data }
       let filteredRows = data[0].rows.filter(row => row[index] >= minDurVal)
       data[0].rows = filteredRows
@@ -217,6 +217,7 @@ export class TableCtrl extends MetricsPanelCtrl {
         const _to = this.range.to.isAfter(moment()) ? moment() : this.range.to
 
         data.columns.splice(1, 0, {text: 'Duration'})
+        data.columns.splice(2, 0, {text: 'DurationValue'})
 
         let _prevTime = null
         for (let i = data.rows.length - 1; i >= 0; i--) {
@@ -227,6 +228,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             const duration = moment.duration(diff)
             const format = this.getDuration(diff)
             data.rows[i].splice(1, 0, format)
+            data.rows[i].splice(2, 0, duration.valueOf())
             this.allData[i].duration = duration
             this.allData[i].durationFormat = format
           } else {
@@ -234,6 +236,7 @@ export class TableCtrl extends MetricsPanelCtrl {
             const duration = moment.duration(diff)
             const format = this.getDuration(diff)
             data.rows[i].splice(1, 0, format)
+            data.rows[i].splice(2, 0, duration.valueOf())
             this.allData[i].duration = duration
             this.allData[i].durationFormat = format
           }
