@@ -54,7 +54,7 @@ System.register(['./utils', 'moment', './camundaAPI'], function (_export, _conte
             this.form = {
               requestComment: '',
               category: this.currentEvent.category,
-              duration: this.currentEvent.duration,
+              duration: this.currentEvent.durationFormat,
               line: this.currentEvent.line,
               area: this.currentEvent.area,
               site: this.currentEvent.site,

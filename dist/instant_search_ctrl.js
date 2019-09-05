@@ -13,7 +13,6 @@ System.register(['./datalist'], function (_export, _context) {
    * @param {*} equipment 
    */
   function enableInstantSearch(equipmentData, divkey, inputkey, ulkey) {
-
     var equipmentDataList = new DataList(divkey, inputkey, ulkey, equipmentData);
 
     equipmentDataList.create();
