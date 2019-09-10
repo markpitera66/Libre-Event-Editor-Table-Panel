@@ -14,14 +14,14 @@
     <div class="modal-content" id="modal-modal-content" style="max-height:600px; overflow-y:scroll">
       <div class="text-center">
 
-        <p style="margin: 0px 0px 10px 0px">Equipment:</p>
-        <div id="eet-datalist-equipment" class="eet-datalist">
+        <p style="margin: 0px 0px 10px 0px" ng-if="model.editForm.equipment">Equipment:</p>
+        <div id="eet-datalist-equipment" class="eet-datalist" ng-if="model.editForm.equipment">
             <input class="eet-datalist-input" id="eet-datalist-input-equipment" type="text" name="equipment" ng-init="model.dataSearch()" ng-model="model.editForm.equipment" placeholder="&#61442; Select An Equipment">
             <i id="datalist-icon" class="icon iconfont icon-arrow eet-dl-i"></i>
             <ul id="eet-datalist-ul-equipment" class="eet-datalist-ul" ng-click="model.onDataSearchChange($event)"></ul>
         </div>
 
-        <div class="custom-separator"></div>
+        <div class="custom-separator" ng-if="model.editForm.equipment"></div>
 
         <p style="margin: 0px 0px 10px 0px">Category</p>
         
