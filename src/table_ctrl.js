@@ -145,7 +145,19 @@ export class TableCtrl extends MetricsPanelCtrl {
 
 	onDataReceived(dataList) {
 		if (dataList.length !== 0) {
-			this.handle(dataList[0]);
+			this.allData = this.parseData(dataList[0].columns, dataList[0].rows);
+			if (!this.allData[0].durationint) {
+				//add durationint
+				dataList[0] = this.calcDurationInt(dataList[0]);
+			} else {
+				dataList[0] = this.calcDurationFormat(dataList[0]);
+			}
+		}
+
+		// check if is table
+		if (dataList[0].type !== 'table') {
+			console.log('data must be shown as TABLE');
+			return;
 		}
 
 		if (this.panel.hideExecute) {
@@ -185,6 +197,63 @@ export class TableCtrl extends MetricsPanelCtrl {
 		this.render();
 	}
 
+	calcDurationInt(data) {
+		const _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
+
+		data.columns.splice(1, 0, { text: 'duration' });
+		data.columns.splice(2, 0, { text: 'durationint' });
+
+		let _prevTime = null;
+		for (let i = data.rows.length - 1; i >= 0; i--) {
+			const row = data.rows[i];
+			if (i === data.rows.length - 1) {
+				// first one
+				const diff = _to.diff(moment(row[0]));
+				const duration = moment.duration(diff);
+				const format = this.getDuration(diff);
+				data.rows[i].splice(1, 0, format);
+				data.rows[i].splice(2, 0, duration.valueOf());
+				this.allData[i].duration = duration;
+				this.allData[i].durationFormat = format;
+			} else {
+				const diff = _prevTime.diff(row[0]);
+				const duration = moment.duration(diff);
+				const format = this.getDuration(diff);
+				data.rows[i].splice(1, 0, format);
+				data.rows[i].splice(2, 0, duration.valueOf());
+				this.allData[i].duration = duration;
+				this.allData[i].durationFormat = format;
+			}
+			_prevTime = moment(row[0]);
+		}
+		return data;
+	}
+
+	calcDurationFormat(data) {
+		const _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
+
+		data.columns.splice(1, 0, { text: 'duration' });
+
+		let _prevTime = null;
+		for (let i = data.rows.length - 1; i >= 0; i--) {
+			const row = data.rows[i];
+			if (i === data.rows.length - 1) {
+				// first one
+				const diff = _to.diff(moment(row[0]));
+				const format = this.getDuration(diff);
+				data.rows[i].splice(1, 0, format);
+				this.allData[i].durationFormat = format;
+			} else {
+				const diff = _prevTime.diff(row[0]);
+				const format = this.getDuration(diff);
+				data.rows[i].splice(1, 0, format);
+				this.allData[i].durationFormat = format;
+			}
+			_prevTime = moment(row[0]);
+		}
+		return data;
+	}
+
 	filterExecute(data) {
 		let filteredData;
 		if (data[0].columns !== null && data[0].columns !== undefined) {
@@ -200,7 +269,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 		const minDurVal = moment.duration(minDur, 'minutes').valueOf();
 		let filteredData;
 		if (data[0].columns !== null && data[0].columns !== undefined) {
-			let index = data[0].columns.findIndex((x) => x.text.toLowerCase() === 'durationvalue');
+			let index = data[0].columns.findIndex((x) => x.text.toLowerCase() === 'durationint');
 			if (!~index) {
 				return data;
 			}
@@ -209,49 +278,6 @@ export class TableCtrl extends MetricsPanelCtrl {
 		}
 		filteredData = data;
 		return filteredData;
-	}
-
-	handle(data) {
-		if (data !== undefined) {
-			if (data.type === 'table') {
-				this.allData = this.parseData(data.columns, data.rows);
-
-				const _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
-
-				data.columns.splice(1, 0, { text: 'Duration' });
-				data.columns.splice(2, 0, { text: 'DurationValue' });
-
-				let _prevTime = null;
-				for (let i = data.rows.length - 1; i >= 0; i--) {
-					const row = data.rows[i];
-					if (i === data.rows.length - 1) {
-						// first one
-						const diff = _to.diff(moment(row[0]));
-						const duration = moment.duration(diff);
-						const format = this.getDuration(diff);
-						data.rows[i].splice(1, 0, format);
-						data.rows[i].splice(2, 0, duration.valueOf());
-						this.allData[i].duration = duration;
-						this.allData[i].durationFormat = format;
-					} else {
-						const diff = _prevTime.diff(row[0]);
-						const duration = moment.duration(diff);
-						const format = this.getDuration(diff);
-						data.rows[i].splice(1, 0, format);
-						data.rows[i].splice(2, 0, duration.valueOf());
-						this.allData[i].duration = duration;
-						this.allData[i].durationFormat = format;
-					}
-					_prevTime = moment(row[0]);
-				}
-			} else {
-				//The table format is not TABLE
-				if (!this.errorLogged) {
-					console.log('To calculate the duration of each event, please format the data as a TABLE');
-				}
-				this.errorLogged = true;
-			}
-		}
 	}
 
 	parseData(cols, rows) {

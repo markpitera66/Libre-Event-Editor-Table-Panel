@@ -235,7 +235,19 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 					key: 'onDataReceived',
 					value: function onDataReceived(dataList) {
 						if (dataList.length !== 0) {
-							this.handle(dataList[0]);
+							this.allData = this.parseData(dataList[0].columns, dataList[0].rows);
+							if (!this.allData[0].durationint) {
+								//add durationint
+								dataList[0] = this.calcDurationInt(dataList[0]);
+							} else {
+								dataList[0] = this.calcDurationFormat(dataList[0]);
+							}
+						}
+
+						// check if is table
+						if (dataList[0].type !== 'table') {
+							console.log('data must be shown as TABLE');
+							return;
 						}
 
 						if (this.panel.hideExecute) {
@@ -275,6 +287,65 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 						this.render();
 					}
 				}, {
+					key: 'calcDurationInt',
+					value: function calcDurationInt(data) {
+						var _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
+
+						data.columns.splice(1, 0, { text: 'duration' });
+						data.columns.splice(2, 0, { text: 'durationint' });
+
+						var _prevTime = null;
+						for (var i = data.rows.length - 1; i >= 0; i--) {
+							var row = data.rows[i];
+							if (i === data.rows.length - 1) {
+								// first one
+								var diff = _to.diff(moment(row[0]));
+								var duration = moment.duration(diff);
+								var format = this.getDuration(diff);
+								data.rows[i].splice(1, 0, format);
+								data.rows[i].splice(2, 0, duration.valueOf());
+								this.allData[i].duration = duration;
+								this.allData[i].durationFormat = format;
+							} else {
+								var _diff = _prevTime.diff(row[0]);
+								var _duration = moment.duration(_diff);
+								var _format = this.getDuration(_diff);
+								data.rows[i].splice(1, 0, _format);
+								data.rows[i].splice(2, 0, _duration.valueOf());
+								this.allData[i].duration = _duration;
+								this.allData[i].durationFormat = _format;
+							}
+							_prevTime = moment(row[0]);
+						}
+						return data;
+					}
+				}, {
+					key: 'calcDurationFormat',
+					value: function calcDurationFormat(data) {
+						var _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
+
+						data.columns.splice(1, 0, { text: 'duration' });
+
+						var _prevTime = null;
+						for (var i = data.rows.length - 1; i >= 0; i--) {
+							var row = data.rows[i];
+							if (i === data.rows.length - 1) {
+								// first one
+								var diff = _to.diff(moment(row[0]));
+								var format = this.getDuration(diff);
+								data.rows[i].splice(1, 0, format);
+								this.allData[i].durationFormat = format;
+							} else {
+								var _diff2 = _prevTime.diff(row[0]);
+								var _format2 = this.getDuration(_diff2);
+								data.rows[i].splice(1, 0, _format2);
+								this.allData[i].durationFormat = _format2;
+							}
+							_prevTime = moment(row[0]);
+						}
+						return data;
+					}
+				}, {
 					key: 'filterExecute',
 					value: function filterExecute(data) {
 						var filteredData = void 0;
@@ -297,7 +368,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 						var filteredData = void 0;
 						if (data[0].columns !== null && data[0].columns !== undefined) {
 							var index = data[0].columns.findIndex(function (x) {
-								return x.text.toLowerCase() === 'durationvalue';
+								return x.text.toLowerCase() === 'durationint';
 							});
 							if (!~index) {
 								return data;
@@ -309,50 +380,6 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 						}
 						filteredData = data;
 						return filteredData;
-					}
-				}, {
-					key: 'handle',
-					value: function handle(data) {
-						if (data !== undefined) {
-							if (data.type === 'table') {
-								this.allData = this.parseData(data.columns, data.rows);
-
-								var _to = this.range.to.isAfter(moment()) ? moment() : this.range.to;
-
-								data.columns.splice(1, 0, { text: 'Duration' });
-								data.columns.splice(2, 0, { text: 'DurationValue' });
-
-								var _prevTime = null;
-								for (var i = data.rows.length - 1; i >= 0; i--) {
-									var row = data.rows[i];
-									if (i === data.rows.length - 1) {
-										// first one
-										var diff = _to.diff(moment(row[0]));
-										var duration = moment.duration(diff);
-										var format = this.getDuration(diff);
-										data.rows[i].splice(1, 0, format);
-										data.rows[i].splice(2, 0, duration.valueOf());
-										this.allData[i].duration = duration;
-										this.allData[i].durationFormat = format;
-									} else {
-										var _diff = _prevTime.diff(row[0]);
-										var _duration = moment.duration(_diff);
-										var _format = this.getDuration(_diff);
-										data.rows[i].splice(1, 0, _format);
-										data.rows[i].splice(2, 0, _duration.valueOf());
-										this.allData[i].duration = _duration;
-										this.allData[i].durationFormat = _format;
-									}
-									_prevTime = moment(row[0]);
-								}
-							} else {
-								//The table format is not TABLE
-								if (!this.errorLogged) {
-									console.log('To calculate the duration of each event, please format the data as a TABLE');
-								}
-								this.errorLogged = true;
-							}
-						}
 					}
 				}, {
 					key: 'parseData',
