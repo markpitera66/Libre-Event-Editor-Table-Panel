@@ -234,6 +234,10 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 				}, {
 					key: 'onDataReceived',
 					value: function onDataReceived(dataList) {
+						if (dataList.length === 0) {
+							return;
+						}
+
 						if (dataList.length !== 0) {
 							this.allData = this.parseData(dataList[0].columns, dataList[0].rows);
 							if (!this.allData[0].durationint) {
@@ -243,6 +247,8 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 								dataList[0] = this.calcDurationFormat(dataList[0]);
 							}
 						}
+
+						console.log('data', dataList);
 
 						// check if is table
 						if (dataList[0].type !== 'table') {

@@ -144,6 +144,10 @@ export class TableCtrl extends MetricsPanelCtrl {
 	}
 
 	onDataReceived(dataList) {
+		if (dataList.length === 0) {
+			return;
+		}
+
 		if (dataList.length !== 0) {
 			this.allData = this.parseData(dataList[0].columns, dataList[0].rows);
 			if (!this.allData[0].durationint) {
@@ -153,6 +157,8 @@ export class TableCtrl extends MetricsPanelCtrl {
 				dataList[0] = this.calcDurationFormat(dataList[0]);
 			}
 		}
+
+		console.log('data', dataList);
 
 		// check if is table
 		if (dataList[0].type !== 'table') {
