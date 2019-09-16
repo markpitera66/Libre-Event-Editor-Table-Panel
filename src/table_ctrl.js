@@ -144,6 +144,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 	}
 
 	onDataReceived(dataList) {
+		console.log('data', dataList);
 		if (dataList.length === 0) {
 			return;
 		}

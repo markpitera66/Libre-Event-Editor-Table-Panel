@@ -234,6 +234,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 				}, {
 					key: 'onDataReceived',
 					value: function onDataReceived(dataList) {
+						console.log('data', dataList);
 						if (dataList.length === 0) {
 							return;
 						}
