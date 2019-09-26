@@ -70,7 +70,7 @@ System.register(['lodash', 'moment', 'app/core/utils/kbn', '@grafana/data'], fun
 							for (var i = 0; i < this.panel.styles.length; i++) {
 								var style = this.panel.styles[i];
 
-								var regex = stringToJsRegex(style.pattern); // for v6.0
+								var regex = kbn.stringToJsRegex(style.pattern); // for v6.0
 								// const regex = stringToJsRegex(style.pattern); // for v6.3
 								if (column.text.match(regex)) {
 									column.style = style;

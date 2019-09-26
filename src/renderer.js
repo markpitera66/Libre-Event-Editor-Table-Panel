@@ -28,7 +28,7 @@ export class TableRenderer {
 			for (let i = 0; i < this.panel.styles.length; i++) {
 				const style = this.panel.styles[i];
 
-				const regex = stringToJsRegex(style.pattern); // for v6.0
+				const regex = kbn.stringToJsRegex(style.pattern); // for v6.0
 				// const regex = stringToJsRegex(style.pattern); // for v6.3
 				if (column.text.match(regex)) {
 					column.style = style;
