@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['lodash', 'moment', 'app/core/utils/kbn', '@grafana/data'], function (_export, _context) {
+System.register(['lodash', 'moment', 'app/core/utils/kbn'], function (_export, _context) {
 	"use strict";
 
-	var _, moment, kbn, stringToJsRegex, _createClass, TableRenderer;
+	var _, moment, kbn, _createClass, TableRenderer;
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -18,8 +18,6 @@ System.register(['lodash', 'moment', 'app/core/utils/kbn', '@grafana/data'], fun
 			moment = _moment.default;
 		}, function (_appCoreUtilsKbn) {
 			kbn = _appCoreUtilsKbn.default;
-		}, function (_grafanaData) {
-			stringToJsRegex = _grafanaData.stringToJsRegex;
 		}],
 		execute: function () {
 			_createClass = function () {
