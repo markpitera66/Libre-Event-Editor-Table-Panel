@@ -84,10 +84,12 @@ export class TablePanelEditorCtrl {
 	}
 
 	checkEndPoint(key) {
+		console.log('key', key);
 		let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`;
 		utils
 			.get(influxUrl)
 			.then((res) => {
+				console.log('res', res);
 				if (!res.results[0].series) {
 					this.panelCtrl.measurementOK = false;
 					utils.alert(
@@ -98,7 +100,7 @@ export class TablePanelEditorCtrl {
 					return;
 				}
 				console.log(res);
-				if (!res.results[0].series[0].columns.includes('held')) {
+				if (!res.results[0].series[0].columns.includes('MachineState')) {
 					this.panelCtrl.measurementOK = false;
 					utils.alert(
 						'error',

@@ -329,7 +329,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 					return;
 				}
 				// console.log(res)
-				if (!res.results[0].series[0].columns.includes('held')) {
+				if (!res.results[0].series[0].columns.includes('MachineState')) {
 					this.panel.measurementOK = false;
 					utils.alert(
 						'error',

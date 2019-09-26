@@ -139,15 +139,17 @@ System.register(['lodash', './transformers', './utils'], function (_export, _con
 					value: function checkEndPoint(key) {
 						var _this2 = this;
 
+						console.log('key', key);
 						var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + key + ' limit 1');
 						utils.get(influxUrl).then(function (res) {
+							console.log('res', res);
 							if (!res.results[0].series) {
 								_this2.panelCtrl.measurementOK = false;
 								utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
 								return;
 							}
 							console.log(res);
-							if (!res.results[0].series[0].columns.includes('held')) {
+							if (!res.results[0].series[0].columns.includes('MachineState')) {
 								_this2.panelCtrl.measurementOK = false;
 								utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
 								return;

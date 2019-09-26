@@ -20,14 +20,15 @@ export class FormOptionCtrl {
 		// utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal')
 		new EditEventCtrl(this).show();
 	}
-
 	async hasQueryData() {
 		const measurement = this.panelCtrl.panel.endPoint;
 		const timestamp = this.currentEvent.timestamp;
+		console.log(timestamp);
 		const influxUrl =
 			utils.influxHost +
 			`query?pretty=true&db=smart_factory&q=select * from ${measurement} where time = ${timestamp}`;
 		const measurementResult = await utils.sure(utils.get(influxUrl));
+		console.log(measurementResult);
 		if (!this.isResultOK(measurementResult, `influxdb - ${measurement}`)) {
 			return false;
 		}

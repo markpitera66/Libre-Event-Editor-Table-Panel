@@ -432,7 +432,7 @@ System.register(['lodash', 'jquery', 'moment', 'app/core/utils/file_export', 'ap
 								return;
 							}
 							// console.log(res)
-							if (!res.results[0].series[0].columns.includes('held')) {
+							if (!res.results[0].series[0].columns.includes('MachineState')) {
 								_this2.panel.measurementOK = false;
 								utils.alert('error', 'Error', "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query");
 								return;

@@ -65,8 +65,10 @@ System.register(['./utils', './edit_event_ctrl', './maintenance_ctrl'], function
 					value: async function hasQueryData() {
 						var measurement = this.panelCtrl.panel.endPoint;
 						var timestamp = this.currentEvent.timestamp;
+						console.log(timestamp);
 						var influxUrl = utils.influxHost + ('query?pretty=true&db=smart_factory&q=select * from ' + measurement + ' where time = ' + timestamp);
 						var measurementResult = await utils.sure(utils.get(influxUrl));
+						console.log(measurementResult);
 						if (!this.isResultOK(measurementResult, 'influxdb - ' + measurement)) {
 							return false;
 						}

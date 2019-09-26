@@ -98,6 +98,7 @@ System.register(['./utils'], function (_export, _context) {
 
 			writeSplitLine = function writeSplitLine(oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, measurement, isLeftLine) {
 				var line = measurement + ',Site=' + utils.addSlash(cur.site) + ',Area=' + utils.addSlash(cur.area) + ',Line=' + utils.addSlash(cur.line) + ' ';
+
 				if (isOK(cur.stopped)) {
 					line += 'stopped=' + cur.stopped + ',';
 				}
@@ -122,9 +123,6 @@ System.register(['./utils'], function (_export, _context) {
 				if (isOK(cur.actual_rate)) {
 					line += 'actual_rate=' + cur.actual_rate + ',';
 				}
-				if (isOK(cur.rid_1)) {
-					line += 'rid_1="' + cur.rid_1 + '",';
-				}
 
 				if (isLeftLine) {
 					// writing left line
@@ -138,6 +136,9 @@ System.register(['./utils'], function (_export, _context) {
 						if (isOK(form.reasons)) {
 							line += 'parentReason="' + form.reasons.split(' | ')[0] + '",';
 							line += 'reason="' + form.reasons + '",';
+						}
+						if (isOK(form.machinestate)) {
+							line += 'MachineState="' + form.machinestate + '",';
 						}
 					} else {
 						// is splitting right
