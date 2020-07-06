@@ -12,7 +12,7 @@ import { FormOptionCtrl } from './form_option_ctrl'
 import './css/style.css!'
 import './css/bootstrap-slider.css!'
 import './css/instant-search.css!'
-import { util } from 'grunt'
+
 
 let _ctrl
 
@@ -159,7 +159,7 @@ export class TableCtrl extends MetricsPanelCtrl {
 
     // check if is table
     if (dataList[0].type !== 'table') {
-      util.alert('Data must be formatted as a TABLE')
+      utils.alert('Data must be formatted as a TABLE')
       return
     }
 
