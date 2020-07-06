@@ -37,7 +37,10 @@ export class FormOptionCtrl {
     try {
       this.currentEvent.record = this.findCurrentEvent(this.currentEvent)
     } catch (e) {
-      util.alert(e.message)
+      util.alert(
+        'error',
+        'Error',
+        `Failed due to ${e.message}`)
       return false
     }
 
@@ -139,7 +142,7 @@ export class FormOptionCtrl {
     if (utils.isValidVal(this.currentEvent.record.category)) {
       new MaintenanceCtrl(this).show()
     } else {
-      utils.alert('error', 'Warning', 'Requesting maintenance requires the Event Category to be specified')
+      utils.alert('error', 'Error', 'Requesting maintenance requires the Event Category to be specified')
       new EditEventCtrl(this).show()
     }
   }

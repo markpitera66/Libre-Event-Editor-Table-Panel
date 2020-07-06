@@ -159,7 +159,10 @@ export class TableCtrl extends MetricsPanelCtrl {
 
     // check if is table
     if (dataList[0].type !== 'table') {
-      utils.alert('Data must be formatted as a TABLE')
+      utils.alert(
+        'error',
+        'Error',
+        'Data must be formatted as a TABLE')
       return
     }
 

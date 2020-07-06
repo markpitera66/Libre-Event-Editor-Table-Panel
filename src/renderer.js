@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import moment from 'moment'
 import kbn from 'app/core/utils/kbn'
-import { stringToJsRegex } from '@grafana/data' // for v6.3
+import { stringToJsRegex } from '@grafana/data' // for v6.0
 
 export class TableRenderer {
   constructor (panel, table, isUtc, sanitize, templateSrv) {
