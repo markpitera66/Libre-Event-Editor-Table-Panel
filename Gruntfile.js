@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    clean: ['dist'],
+    clean: ['dist', 'libre-event-editor-table-panel'],
 
     jshint: {
       options: {
@@ -35,25 +35,32 @@ module.exports = function (grunt) {
           process: content => content.replace(/(\'|")ion.rangeSlider(\'|")/g, '$1./ion.rangeSlider.min$2'), // eslint-disable-line
         }
       },
-      echarts_libs: {
-        cwd: 'node_modules/echarts/dist',
-        expand: true,
-        src: ['echarts.min.js'],
-        dest: 'dist/libs/'
-      },
-      image_to_dist: {
-        cwd: 'src',
-        expand: true,
-        src: ['src/image/**/*'],
-        dest: 'dist/image/'
-      },
       pluginDef: {
         expand: true,
         src: ['plugin.json'],
         dest: 'dist'
+      },
+      readme: {
+        expand: true,
+        src: ['README.md', 'docs/**', 'LICENSE', 'MAINTAINERS'],
+        dest: 'dist'
       }
     },
-
+    'string-replace': {
+      dist: {
+        files: {
+          'dist/README.md': 'dist/README.md'
+        },
+        options: {
+          replacements: [
+            {
+              pattern: /docs\//g,
+              replacement: 'public/plugins/libre-event-editor-table-panel/docs/'
+            }
+          ]
+        }
+      }
+    },
     watch: {
       rebuild_all: {
         files: ['src/**/*', 'plugin.json'],
@@ -78,13 +85,28 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       }
+    },
+    compress: {
+      main: {
+        options: {
+          archive: 'libre-event-editor-table-panel.zip'
+        },
+        expand: true,
+        cwd: 'dist/',
+        src: ['**/*']
+      }
     }
   })
   grunt.registerTask('default', [
-    'clean',
     'copy:src_to_dist',
     'copy:libs',
+    'copy:readme',
+    'string-replace',
     'copy:pluginDef',
-    'copy:image_to_dist',
     'babel'])
+  grunt.registerTask('build', [
+    'clean',
+    'default',
+    'compress'
+  ])
 }
