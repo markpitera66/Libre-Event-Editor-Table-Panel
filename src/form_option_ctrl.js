@@ -1,7 +1,6 @@
 import * as utils from './utils'
 import { EditEventCtrl } from './edit_event_ctrl'
 import { MaintenanceCtrl } from './maintenance_ctrl'
-import { util } from 'grunt'
 
 export class FormOptionCtrl {
   /** @ngInject */
@@ -37,7 +36,7 @@ export class FormOptionCtrl {
     try {
       this.currentEvent.record = this.findCurrentEvent(this.currentEvent)
     } catch (e) {
-      util.alert(
+      utils.alert(
         'error',
         'Error',
         `Failed due to ${e.message}`)

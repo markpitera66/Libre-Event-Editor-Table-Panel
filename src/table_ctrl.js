@@ -13,7 +13,6 @@ import './css/style.css!'
 import './css/bootstrap-slider.css!'
 import './css/instant-search.css!'
 
-
 let _ctrl
 
 const panelDefaults = {
