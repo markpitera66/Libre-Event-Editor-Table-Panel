@@ -14,6 +14,12 @@
       {"name": "Project site", "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel"},
       {"name": "Issues", "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel/issues"}
     ],
+    "screenshots": [
+      {"name": "Panel", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel.png"},
+      {"name": "Event", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel-event.png"},
+      {"name": "Split", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel-event-split.png"},
+      {"name": "Metrics", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-metrics.png"}
+    ],
     "logos": {
       "small": "img/icn-table-panel.svg",
       "large": "img/icn-table-panel.svg"
