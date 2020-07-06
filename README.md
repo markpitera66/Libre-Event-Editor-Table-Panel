@@ -73,6 +73,8 @@ WHERE $timeFilter
   AND "Line" = '$Line'
 ```
 
+![Panel Metrics](./docs/libre-event-editor-table-panel-metrics.png)
+
 3. Apply custom column styles:
 
 | Time format should be 'YYYY-MM-DD HH:mm:ss.SSS' to avoid unwanted results.
