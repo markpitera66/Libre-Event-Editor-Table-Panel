@@ -12,7 +12,7 @@
   },
   "main": "src/module.js",
   "scripts": {
-    "lint": "eslint --color .",
+    "lint": "standard src/*.js Gruntfile.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -42,7 +42,8 @@
     "grunt-force-task": "^2.0.0",
     "grunt-multi-dest": "^1.0.0",
     "grunt-systemjs-builder": "^0.2.5",
-    "load-grunt-tasks": "~3.2.0"
+    "load-grunt-tasks": "~3.2.0",
+    "standard": "^14.3.4"
   },
   "dependencies": {
     "lodash": "^4.17.2",
