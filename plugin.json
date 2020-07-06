@@ -9,17 +9,15 @@
     "links": [
       {"name": "Project site", "url": "https://github.com/Billiballa/grafana-table-panel"}
     ],
+    "logos": {
+      "small": "img/icn-table-panel.svg",
+      "large": "img/icn-table-panel.svg"
+    },
     "version": "1.0.0",
-    "updated": "2017-06-23"
+    "updated": "2020-07-06"
   },
-  
-  "logos": {
-    "small": "img/icn-table-panel.svg",
-    "large": "img/icn-table-panel.svg"
-  },
-
   "dependencies": {
-    "grafanaVersion": "4.x.x",
+    "grafanaVersion": "6.x.x",
     "plugins": [ ]
   }
 }
