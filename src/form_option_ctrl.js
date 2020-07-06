@@ -1,6 +1,5 @@
 import * as utils from './utils'
 import { EditEventCtrl } from './edit_event_ctrl'
-import { MaintenanceCtrl } from './maintenance_ctrl'
 
 export class FormOptionCtrl {
   /** @ngInject */
@@ -137,12 +136,4 @@ export class FormOptionCtrl {
     new EditEventCtrl(this).show()
   }
 
-  onMaintainClick () {
-    if (utils.isValidVal(this.currentEvent.record.category)) {
-      new MaintenanceCtrl(this).show()
-    } else {
-      utils.alert('error', 'Error', 'Requesting maintenance requires the Event Category to be specified')
-      new EditEventCtrl(this).show()
-    }
-  }
 }

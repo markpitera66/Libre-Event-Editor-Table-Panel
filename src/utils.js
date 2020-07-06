@@ -6,13 +6,6 @@ export const postgRestHost = protocol + hostname + ':5436/'
 export const influxHost = protocol + hostname + ':8086/'
 export const influxDBName = 'smart_factory'
 
-let tasklistHostName = hostname
-if (tasklistHostName === 'localhost') {
-  tasklistHostName = '127.0.0.1'
-}
-export const camundaHost = protocol + tasklistHostName + ':8080/camunda/app/tasklist'
-export const camundaRestApi = protocol + hostname + ':8080/engine-rest/'
-
 export const get = (url) => {
   return new Promise((resolve, reject) => {
     var xhr = new XMLHttpRequest()

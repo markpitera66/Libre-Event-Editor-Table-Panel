@@ -72,7 +72,6 @@ export class TableCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this))
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this))
 
-    this.panel.camundaUrl = $sce.trustAsResourceUrl(utils.camundaHost)
     this.panel.measurementOK = false
 
     $(document).off('click', 'tr.tr-affect#event-editor-table-tr-id')
