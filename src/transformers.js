@@ -164,8 +164,6 @@ transformers.table = {
       throw err
     }
 
-    // mergeTablesIntoModel(model, ...data);
-
     model.columns = data[0].columns
     model.rows = data[0].rows
   }

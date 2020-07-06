@@ -324,7 +324,6 @@ export class TableCtrl extends MetricsPanelCtrl {
           )
           return
         }
-        // console.log(res)
         if (!res.results[0].series[0].columns.includes('MachineState')) {
           this.panel.measurementOK = false
           utils.alert(
@@ -370,7 +369,6 @@ export class TableCtrl extends MetricsPanelCtrl {
 
   getInfluxLine (record, duration, durationInt) {
     if (!this.panel.measurementOK) {
-      // console.log('not writing 1')
       return
     }
     const measurement = this.panel.endPoint
@@ -430,13 +428,11 @@ export class TableCtrl extends MetricsPanelCtrl {
 
     line += record.time * 1000000
 
-    // console.log('line1' , line)
     return line
   }
 
   normalInfluxLine (record) {
     if (!this.panel.measurementOK) {
-      // console.log('not writing')
       return
     }
     const measurement = this.panel.endPoint
@@ -494,16 +490,12 @@ export class TableCtrl extends MetricsPanelCtrl {
 
     line += record.time * 1000000
 
-    // console.log('line2' , line)
-
     return line
   }
 
   render () {
     this.table = transformDataToTable(this.dataRaw, this.panel)
-    // console.log(this.panel.sort);
     this.table.sort(this.panel.sort)
-    // console.log(this.panel.sort);
     this.renderer = new TableRenderer(
       this.panel,
       this.table,

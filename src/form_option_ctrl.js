@@ -17,7 +17,6 @@ export class FormOptionCtrl {
     if (!hasQueryData) {
       return
     }
-    // utils.showModal('form_option_form.html', this, 'editOrMaintenance-modal')
     new EditEventCtrl(this).show()
   }
 
@@ -25,9 +24,7 @@ export class FormOptionCtrl {
     const measurement = this.panelCtrl.panel.endPoint
     const timestamp = this.currentEvent.timestamp
     console.log(timestamp)
-    const influxUrl =
-			utils.influxHost +
-			`query?pretty=true&db=smart_factory&q=select * from ${measurement} where time = ${timestamp}`
+    const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${measurement} where time = ${timestamp}`
     const measurementResult = await utils.sure(utils.get(influxUrl))
     console.log(measurementResult)
     if (!this.isResultOK(measurementResult, `influxdb - ${measurement}`)) {
@@ -46,9 +43,7 @@ export class FormOptionCtrl {
     }
 
     const equipmentEndPoint = this.panelCtrl.panel.equipmentEndPoint
-    const equipmentUrl =
-			utils.postgRestHost +
-			`${equipmentEndPoint}?production_line=eq.${this.currentEvent.record.line}&equipment=not.is.null`
+    const equipmentUrl = utils.postgRestHost + `${equipmentEndPoint}?production_line=eq.${this.currentEvent.record.line}&equipment=not.is.null`
     const equipmentResult = await utils.sure(utils.get(equipmentUrl))
     if (!this.isResultOK(equipmentResult, `postgresDB - ${equipmentEndPoint}`)) {
       return false
@@ -117,7 +112,7 @@ export class FormOptionCtrl {
       utils.alert(
         'error',
         'Error',
-				`Unexpected error occurred whiling getting data from ${source}, please try again`
+        `Unexpected error occurred whiling getting data from ${source}, please try again`
       )
       console.log(result.error)
       return false
@@ -131,7 +126,7 @@ export class FormOptionCtrl {
       utils.alert(
         'error',
         'Error',
-				`${source} is OK but returns EMPTY result, please make sure the data config measurement matches the one you put in the query and try again`
+        `${source} is OK but returns EMPTY result, please make sure the data config measurement matches the one you put in the query and try again`
       )
       return false
     }

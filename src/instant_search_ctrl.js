@@ -1,4 +1,5 @@
 import { DataList } from './datalist'
+
 /**
  * Expect the product list and production line list data
  * Passed these two data passed in to form the datalist

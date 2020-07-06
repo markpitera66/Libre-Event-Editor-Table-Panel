@@ -1,7 +1,6 @@
 import * as utils from './utils'
 import * as instant from './instant_search_ctrl'
 import * as influx from './influxAPI'
-
 import { SplitEventCtrl } from './split_event_form'
 
 export class EditEventCtrl {
@@ -105,8 +104,7 @@ export class EditEventCtrl {
         utils.alert(
           'warning',
           'Warning',
-					`Cannot find equipment "${this.editForm
-						.equipment}" in the database, please choose it from the list or just leave it empty`
+          `Cannot find equipment "${this.editForm.equipment}" in the database, please choose it from the list or just leave it empty`
         )
         return
       }
@@ -125,7 +123,7 @@ export class EditEventCtrl {
       utils.alert(
         'error',
         'Error',
-				`Unexpected error occurred when updating this event due to ${result.error}, please try again or contact the dev team`
+        `Unexpected error occurred when updating this event due to ${result.error}, please try again or contact the dev team`
       )
       this.closeForm()
       console.log(result.error)
@@ -139,8 +137,7 @@ export class EditEventCtrl {
         utils.alert(
           'warning',
           'Warning',
-					`Cannot find equipment "${this.editForm
-						.equipment}" in the database, please choose it from the list or just leave it empty`
+          `Cannot find equipment "${this.editForm.equipment}" in the database, please choose it from the list or just leave it empty`
         )
         return
       }

@@ -81,11 +81,9 @@ module.exports = function (grunt) {
     }
   })
   grunt.registerTask('default', [
-    // 'jshint',
     'clean',
     'copy:src_to_dist',
     'copy:libs',
-    // 'copy:echarts_libs',
     'copy:pluginDef',
     'copy:image_to_dist',
     'babel'])

@@ -1,17 +1,17 @@
 import { appEvents } from 'app/core/core'
 
 const hostname = window.location.hostname
-const http = 'http://'
-export const postgRestHost = http + hostname + ':5436/'
-export const influxHost = http + hostname + ':8086/'
+const protocol = window.location.protocol + '//'
+export const postgRestHost = protocol + hostname + ':5436/'
+export const influxHost = protocol + hostname + ':8086/'
 export const influxDBName = 'smart_factory'
 
 let tasklistHostName = hostname
 if (tasklistHostName === 'localhost') {
   tasklistHostName = '127.0.0.1'
 }
-export const camundaHost = http + tasklistHostName + ':8080/camunda/app/tasklist'
-export const camundaRestApi = http + hostname + ':8080/engine-rest/'
+export const camundaHost = protocol + tasklistHostName + ':8080/camunda/app/tasklist'
+export const camundaRestApi = protocol + hostname + ':8080/engine-rest/'
 
 export const get = (url) => {
   return new Promise((resolve, reject) => {
@@ -45,11 +45,9 @@ export const post = (url, line) => {
     function handleResponse () {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          // console.log('200');
           var res = JSON.parse(xhr.responseText)
           resolve(res)
         } else if (xhr.status === 204) {
-          // console.log('204');
           res = xhr.responseText
           resolve(res)
         } else {
