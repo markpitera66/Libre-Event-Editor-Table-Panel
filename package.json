@@ -1,14 +1,14 @@
 {
-  "name": "smart-factory-event-editor-table-panel",
+  "name": "libre-event-editor-table-panel",
   "version": "1.0.0",
-  "description": "Improved grafana table plugin",
+  "description": "Libre Grafana Panel to assign Downtime Event Reasons",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Spruik/smart-factory-event-editor-table-panel"
+    "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel"
   },
   "author": "Spruik Technologies",
   "bugs": {
-    "url": "https://github.com/Spruik/smart-factory-event-editor-table-panel/issues"
+    "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel/issues"
   },
   "main": "src/module.js",
   "scripts": {

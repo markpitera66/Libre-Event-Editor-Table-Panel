@@ -679,4 +679,4 @@ export const isReadyToWriteInData = () => {
 	return _ctrl.panel.measurementOK;
 };
 
-TableCtrl.templateUrl = './partials/module.html';
+TableCtrl.templateUrl = 'public/plugins/libre-event-editor-table-panel/partials/module.html';
