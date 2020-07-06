@@ -89,7 +89,6 @@ export class TablePanelEditorCtrl {
     utils
       .get(influxUrl)
       .then((res) => {
-        console.log('res', res)
         if (!res.results[0].series) {
           this.panelCtrl.measurementOK = false
           utils.alert(
@@ -99,13 +98,12 @@ export class TablePanelEditorCtrl {
           )
           return
         }
-        console.log(res)
-        if (!res.results[0].series[0].columns.includes('MachineState')) {
+        if (!res.results[0].series[0].columns.includes('status')) {
           this.panelCtrl.measurementOK = false
           utils.alert(
             'error',
             'Error',
-            "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+            "Expected 'status' in out of metric query"
           )
           return
         }

@@ -71,9 +71,6 @@ const writeLine = (measurement, current, data) => {
   if (isOK(cur.status)) {
     line += `status="${cur.status}",`
   }
-  if (isOK(cur.machinestate)) {
-    line += `MachineState="${cur.machinestate}",`
-  }
 
   if (isOK(cur.actual_rate)) {
     line += `actual_rate=${cur.actual_rate},`
@@ -119,9 +116,7 @@ const writeSplitLine = (oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, mea
   if (isOK(cur.status)) {
     line += `status="${cur.status}",`
   }
-  if (isOK(cur.machinestate)) {
-    line += `MachineState="${cur.machinestate}",`
-  }
+
   if (isOK(cur.actual_rate)) {
     line += `actual_rate=${cur.actual_rate},`
   }
@@ -138,9 +133,6 @@ const writeSplitLine = (oldTimeStamp, newTimeStamp, maxTimeStamp, cur, form, mea
       if (isOK(form.reasons)) {
         line += `parentReason="${form.reasons.split(' | ')[0]}",`
         line += `reason="${form.reasons}",`
-      }
-      if (isOK(form.machinestate)) {
-        line += `MachineState="${form.machinestate}",`
       }
     } else {
       // is splitting right

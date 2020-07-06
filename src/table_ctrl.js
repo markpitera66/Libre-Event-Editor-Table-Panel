@@ -12,6 +12,7 @@ import { FormOptionCtrl } from './form_option_ctrl'
 import './css/style.css!'
 import './css/bootstrap-slider.css!'
 import './css/instant-search.css!'
+import { util } from 'grunt'
 
 let _ctrl
 
@@ -320,27 +321,27 @@ export class TableCtrl extends MetricsPanelCtrl {
           utils.alert(
             'error',
             'Error',
-            "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+            'No series found in out of metric query'
           )
           return
         }
-        if (!res.results[0].series[0].columns.includes('MachineState')) {
+        if (!res.results[0].series[0].columns.includes('status')) {
           this.panel.measurementOK = false
           utils.alert(
             'error',
             'Error',
-            "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+            "Expected to find 'status' in out of metric query"
           )
           return
         }
         this.panel.measurementOK = true
       })
-      .catch(() => {
+      .catch((err) => {
         this.panel.measurementOK = false
         utils.alert(
           'error',
           'Error',
-          "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+          `Failed to query influx due to ${err}`
         )
       })
   }
@@ -395,20 +396,12 @@ export class TableCtrl extends MetricsPanelCtrl {
       line += 'status="' + record.status + '"' + ','
     }
 
-    if (record.machinestate !== null && record.machinestate !== undefined) {
-      line += 'MachineState="' + record.machinestate + '"' + ','
-    }
-
     if (record.actual_rate !== null && record.actual_rate !== undefined) {
       line += 'actual_rate=' + record.actual_rate + ','
     }
 
     if (record.rid !== null && record.rid !== undefined) {
       line += 'rid_1="' + record.rid + '"' + ','
-    }
-
-    if (record.MachineState !== null && record.MachineState !== undefined) {
-      line += 'MachineState="' + record.MachineState + '"' + ','
     }
 
     if (record.parentReason !== null && record.parentReason !== undefined) {
@@ -453,10 +446,6 @@ export class TableCtrl extends MetricsPanelCtrl {
 
     if (record.complete !== null && record.complete !== undefined) {
       line += 'complete=' + record.complete + ','
-    }
-
-    if (record.MachineState !== null && record.MachineState !== undefined) {
-      line += 'MachineState="' + record.MachineState + '"' + ','
     }
 
     if (record.rid !== null && record.rid !== undefined) {

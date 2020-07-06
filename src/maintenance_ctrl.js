@@ -31,7 +31,7 @@ export class MaintenanceCtrl {
     this.form.equipment = this.form.equipment.split(' | ')[1] || this.form.equipment.split(' | ')[0]
     this.form.reason = this.currentEvent.reason || 'Unknown'
     if (!this.currentEvent.status) {
-      this.form.status = this.currentEvent.machinestate || 'Unknown'
+      this.form.status = this.form.status || 'Unknown'
     } else {
       this.form.status = this.currentEvent.status
     }
@@ -54,7 +54,6 @@ export class MaintenanceCtrl {
     } else {
       utils.alert('error', 'Error', `Unexpected error occurred when sending the maintenance request due to ${result.error}, please try again or contact the dev team`)
       this.closeForm()
-      console.log(result.error)
     }
   }
 
