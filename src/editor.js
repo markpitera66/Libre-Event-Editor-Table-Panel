@@ -1,145 +1,141 @@
-import _ from 'lodash';
-import { transformers } from './transformers';
-import * as utils from './utils';
+import _ from 'lodash'
+import { transformers } from './transformers'
+import * as utils from './utils'
 
 export class TablePanelEditorCtrl {
-	/** @ngInject */
-	constructor($scope, $q, uiSegmentSrv) {
-		$scope.editor = this;
-		this.panelCtrl = $scope.ctrl;
-		this.panel = this.panelCtrl.panel;
-		this.transformers = transformers;
-		this.fontSizes = [
-			'80%',
-			'90%',
-			'100%',
-			'110%',
-			'120%',
-			'130%',
-			'150%',
-			'160%',
-			'180%',
-			'200%',
-			'220%',
-			'250%'
-		];
-		this.addColumnSegment = uiSegmentSrv.newPlusButton();
-		this.updateTransformHints();
-	}
+  /** @ngInject */
+  constructor ($scope, $q, uiSegmentSrv) {
+    $scope.editor = this
+    this.panelCtrl = $scope.ctrl
+    this.panel = this.panelCtrl.panel
+    this.transformers = transformers
+    this.fontSizes = [
+      '80%',
+      '90%',
+      '100%',
+      '110%',
+      '120%',
+      '130%',
+      '150%',
+      '160%',
+      '180%',
+      '200%',
+      '220%',
+      '250%'
+    ]
+    this.addColumnSegment = uiSegmentSrv.newPlusButton()
+    this.updateTransformHints()
+  }
 
-	updateTransformHints() {
-		this.canSetColumns = false;
-		this.columnsHelpMessage = '';
+  updateTransformHints () {
+    this.canSetColumns = false
+    this.columnsHelpMessage = ''
 
-		switch (this.panel.transform) {
-			case 'timeseries_aggregations': {
-				this.canSetColumns = true;
-				break;
-			}
-			case 'json': {
-				this.canSetColumns = true;
-				break;
-			}
-			case 'table': {
-				this.columnsHelpMessage = 'Columns and their order are determined by the data query';
-			}
-		}
-	}
+    switch (this.panel.transform) {
+      case 'timeseries_aggregations': {
+        this.canSetColumns = true
+        break
+      }
+      case 'json': {
+        this.canSetColumns = true
+        break
+      }
+      case 'table': {
+        this.columnsHelpMessage = 'Columns and their order are determined by the data query'
+      }
+    }
+  }
 
-	getColumnOptions() {
-		if (!this.panelCtrl.dataRaw) {
-			return this.$q.when([]);
-		}
-		const columns = this.transformers[this.panel.transform].getColumns(this.panelCtrl.dataRaw);
-		const segments = _.map(columns, (c) => this.uiSegmentSrv.newSegment({ value: c.text }));
-		return this.$q.when(segments);
-	}
+  getColumnOptions () {
+    if (!this.panelCtrl.dataRaw) {
+      return this.$q.when([])
+    }
+    const columns = this.transformers[this.panel.transform].getColumns(this.panelCtrl.dataRaw)
+    const segments = _.map(columns, (c) => this.uiSegmentSrv.newSegment({ value: c.text }))
+    return this.$q.when(segments)
+  }
 
-	addColumn() {
-		const columns = transformers[this.panel.transform].getColumns(this.panelCtrl.dataRaw);
-		const column = _.find(columns, { text: this.addColumnSegment.value });
+  addColumn () {
+    const columns = transformers[this.panel.transform].getColumns(this.panelCtrl.dataRaw)
+    const column = _.find(columns, { text: this.addColumnSegment.value })
 
-		if (column) {
-			this.panel.columns.push(column);
-			this.render();
-		}
+    if (column) {
+      this.panel.columns.push(column)
+      this.render()
+    }
 
-		const plusButton = this.uiSegmentSrv.newPlusButton();
-		this.addColumnSegment.html = plusButton.html;
-		this.addColumnSegment.value = plusButton.value;
-	}
+    const plusButton = this.uiSegmentSrv.newPlusButton()
+    this.addColumnSegment.html = plusButton.html
+    this.addColumnSegment.value = plusButton.value
+  }
 
-	transformChanged() {
-		this.panel.columns = [];
-		if (this.panel.transform === 'timeseries_aggregations') {
-			this.panel.columns.push({ text: 'Avg', value: 'avg' });
-		}
+  transformChanged () {
+    this.panel.columns = []
+    if (this.panel.transform === 'timeseries_aggregations') {
+      this.panel.columns.push({ text: 'Avg', value: 'avg' })
+    }
 
-		this.updateTransformHints();
-		this.render();
-	}
+    this.updateTransformHints()
+    this.render()
+  }
 
-	render() {
-		this.panelCtrl.refresh();
-	}
+  render () {
+    this.panelCtrl.refresh()
+  }
 
-	checkEndPoint(key) {
-		console.log('key', key);
-		let influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`;
-		utils
-			.get(influxUrl)
-			.then((res) => {
-				console.log('res', res);
-				if (!res.results[0].series) {
-					this.panelCtrl.measurementOK = false;
-					utils.alert(
-						'error',
-						'Error',
-						"The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
-					);
-					return;
-				}
-				console.log(res);
-				if (!res.results[0].series[0].columns.includes('MachineState')) {
-					this.panelCtrl.measurementOK = false;
-					utils.alert(
-						'error',
-						'Error',
-						"The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
-					);
-					return;
-				}
-				utils.alert(
-					'success',
-					'Success',
-					"The measurement you put in has been tested and it's a valid measurement"
-				);
-				this.panelCtrl.measurementOK = true;
-			})
-			.catch(() => {
-				this.panelCtrl.measurementOK = false;
-				utils.alert(
-					'error',
-					'Error',
-					"The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
-				);
-				return;
-			});
-	}
+  checkEndPoint (key) {
+    const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`
+    utils
+      .get(influxUrl)
+      .then((res) => {
+        if (!res.results[0].series) {
+          this.panelCtrl.measurementOK = false
+          utils.alert(
+            'error',
+            'Error',
+            "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+          )
+          return
+        }
+        if (!res.results[0].series[0].columns.includes('status')) {
+          this.panelCtrl.measurementOK = false
+          utils.alert(
+            'error',
+            'Error',
+            "Expected 'status' in out of metric query"
+          )
+          return
+        }
+        utils.alert(
+          'success',
+          'Success',
+          "The measurement you put in has been tested and it's a valid measurement"
+        )
+        this.panelCtrl.measurementOK = true
+      })
+      .catch(() => {
+        this.panelCtrl.measurementOK = false
+        utils.alert(
+          'error',
+          'Error',
+          "The measurement you put in the Down Time Panel may be invalid, please make sure it matches the one that's in the query"
+        )
+      })
+  }
 
-	removeColumn(column) {
-		this.panel.columns = _.without(this.panel.columns, column);
-		this.panelCtrl.render();
-	}
+  removeColumn (column) {
+    this.panel.columns = _.without(this.panel.columns, column)
+    this.panelCtrl.render()
+  }
 }
 
 /** @ngInject */
-export function tablePanelEditor($q, uiSegmentSrv) {
-	'use strict';
-	return {
-		restrict: 'E',
-		scope: true,
-		templateUrl: 'public/plugins/smart-factory-event-editor-table-panel/partials/editor.html',
-		controller: TablePanelEditorCtrl
-	};
+export function tablePanelEditor ($q, uiSegmentSrv) {
+  'use strict'
+  return {
+    restrict: 'E',
+    scope: true,
+    templateUrl: 'public/plugins/libre-event-editor-table-panel/partials/editor.html',
+    controller: TablePanelEditorCtrl
+  }
 }

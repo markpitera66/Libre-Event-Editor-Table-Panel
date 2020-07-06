@@ -1,25 +1,34 @@
 {
+  "id": "libre-event-editor-table-panel",
+  "name": "Downtime Event Editor",
   "type": "panel",
-  "name": "Event Editor Table",
-  "id": "smart-factory-event-editor-table-panel",
-
   "info": {
-    "description": "Improved grafana table plugin",
-    "keywords": ["table", "panel"],
+    "author": {
+      "name": "Spruik Technologies",
+      "email": "info@spruiktec.com",
+      "url": "https://spruiktec.com"
+    },
+    "description": "Libre Grafana Panel to assign Downtime Event Reasons",
+    "keywords": ["table", "panel", "libre"],
     "links": [
-      {"name": "Project site", "url": "https://github.com/Billiballa/grafana-table-panel"}
+      {"name": "Project site", "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel"},
+      {"name": "Issues", "url": "https://github.com/Spruik/Libre-Event-Editor-Table-Panel/issues"}
     ],
+    "screenshots": [
+      {"name": "Panel", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel.png"},
+      {"name": "Event", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel-event.png"},
+      {"name": "Split", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-panel-event-split.png"},
+      {"name": "Metrics", "url":"public/plugins/libre-event-editor-table-panel/docs/libre-event-editor-table-metrics.png"}
+    ],
+    "logos": {
+      "small": "img/icn-table-panel.svg",
+      "large": "img/icn-table-panel.svg"
+    },
     "version": "1.0.0",
-    "updated": "2017-06-23"
+    "updated": "2020-07-06"
   },
-  
-  "logos": {
-    "small": "img/icn-table-panel.svg",
-    "large": "img/icn-table-panel.svg"
-  },
-
   "dependencies": {
-    "grafanaVersion": "4.x.x",
+    "grafanaVersion": "6.x.x",
     "plugins": [ ]
   }
 }
