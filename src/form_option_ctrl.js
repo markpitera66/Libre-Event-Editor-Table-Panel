@@ -1,6 +1,7 @@
 import * as utils from './utils'
 import { EditEventCtrl } from './edit_event_ctrl'
 import { MaintenanceCtrl } from './maintenance_ctrl'
+import { util } from 'grunt'
 
 export class FormOptionCtrl {
   /** @ngInject */
@@ -23,10 +24,8 @@ export class FormOptionCtrl {
   async hasQueryData () {
     const measurement = this.panelCtrl.panel.endPoint
     const timestamp = this.currentEvent.timestamp
-    console.log(timestamp)
     const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${measurement} where time = ${timestamp}`
     const measurementResult = await utils.sure(utils.get(influxUrl))
-    console.log(measurementResult)
     if (!this.isResultOK(measurementResult, `influxdb - ${measurement}`)) {
       return false
     }
@@ -38,7 +37,7 @@ export class FormOptionCtrl {
     try {
       this.currentEvent.record = this.findCurrentEvent(this.currentEvent)
     } catch (e) {
-      console.log('e', e)
+      util.alert(e.message)
       return false
     }
 
@@ -114,7 +113,6 @@ export class FormOptionCtrl {
         'Error',
         `Unexpected error occurred whiling getting data from ${source}, please try again`
       )
-      console.log(result.error)
       return false
     } else {
       return true

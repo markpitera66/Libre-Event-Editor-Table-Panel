@@ -126,7 +126,6 @@ export class EditEventCtrl {
         `Unexpected error occurred when updating this event due to ${result.error}, please try again or contact the dev team`
       )
       this.closeForm()
-      console.log(result.error)
     }
   }
 

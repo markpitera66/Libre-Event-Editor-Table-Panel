@@ -84,7 +84,6 @@ export class TablePanelEditorCtrl {
   }
 
   checkEndPoint (key) {
-    console.log('key', key)
     const influxUrl = utils.influxHost + `query?pretty=true&db=smart_factory&q=select * from ${key} limit 1`
     utils
       .get(influxUrl)

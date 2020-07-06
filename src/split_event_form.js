@@ -143,7 +143,6 @@ export class SplitEventCtrl {
         `Unexpected error occurred when splitting this event due to ${result.error}, please try agian or contact the dev team`
       )
       this.closeForm()
-      console.log(result.error)
     }
   }
 

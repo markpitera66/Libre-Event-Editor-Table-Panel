@@ -143,7 +143,6 @@ export class TableCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived (dataList) {
-    console.log('data', dataList)
     if (dataList.length === 0) {
       return
     }
@@ -158,11 +157,9 @@ export class TableCtrl extends MetricsPanelCtrl {
       }
     }
 
-    console.log('data', dataList)
-
     // check if is table
     if (dataList[0].type !== 'table') {
-      console.log('data must be shown as TABLE')
+      util.alert('Data must be formatted as a TABLE')
       return
     }
 
