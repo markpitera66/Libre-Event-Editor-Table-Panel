@@ -1,6 +1,6 @@
 {
   "name": "libre-event-editor-table-panel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Libre Grafana Panel to assign Downtime Event Reasons",
   "repository": {
     "type": "git",
