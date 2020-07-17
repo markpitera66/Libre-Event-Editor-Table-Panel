@@ -142,7 +142,6 @@ Unpacking objects: 100% (46/46), done.
 
 Enter project and install dependencies
 
-```shell
 $ cd ./Libre-Event-Editor-Table-Panel
 ~/Libre-Event-Editor-Table-Panel
 $ npm install
