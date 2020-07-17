@@ -1,6 +1,6 @@
 # Event Editor Table Panel
 
-| Libre Grafana Panel to assign Downtime Event Reasons
+> Libre Grafana Panel to assign Downtime Event Reasons
 
 This panel gives users the ability to list downtime reasons and edit them to assign a downtime category, reason and comment. Users can also split event to correctly capture downtime information. This panel is part of [Libre](https://github.com/Spruik/Libre). Downtime categories and reasons are defined in [Libre Reason Code CRUD Tree Chart Panel](https://github.com/Spruik/Libre-Reason-Codes-CRUD-Tree-Chart-Panel). This plugin interfaces to a no security json rest api for materials running on the same grafana server. This panel is targeted at Grafana v6.x.x only.
 
@@ -132,7 +132,7 @@ Start by cloning this repository
 ```shell
 ~/
 $ git clone https://github.com/Spruik/Libre-Event-Editor-Table-Panel
-Cloning into 'libre-event-editor-table-panel'...
+Cloning into 'Libre-Event-Editor-Table-Panel'...
 remote: Enumerating objects: 46, done.
 remote: Counting objects: 100% (46/46), done.
 remote: Compressing objects: 100% (31/31), done.
@@ -142,9 +142,8 @@ Unpacking objects: 100% (46/46), done.
 
 Enter project and install dependencies
 
-```shell
-$ cd ./libre-event-editor-table-panel
-~/libre-event-editor-table-panel
+$ cd ./Libre-Event-Editor-Table-Panel
+~/Libre-Event-Editor-Table-Panel
 $ npm install
 ...
 added 714 packages from 399 contributors and audited 719 packages in 11.871s
@@ -164,17 +163,23 @@ updated 1 package in 1.364s
 Run grunt to build the panel
 
 ```shell
+~/Libre-Event-Editor-Table-Panel
 $ grunt
-
 Running "copy:src_to_dist" (copy) task
-Created 2 directories, copied 8 files
+Created 3 directories, copied 9 files
 
 Running "copy:libs" (copy) task
+Copied 1 file
+
+Running "copy:readme" (copy) task
+Created 1 directory, copied 8 files
+
+Running "string-replace:dist" (string-replace) task
+
+1 files created
 
 Running "copy:pluginDef" (copy) task
 Copied 1 file
-
-Running "copy:image_to_dist" (copy) task
 
 Running "babel:dist" (babel) task
 
@@ -185,18 +190,21 @@ Done, without errors.
 Start docker-compose.dev.yml detached
 
 ```shell
-~/libre-event-editor-table-panel
-$ docker-compose -f docker-compose.dev.yml up -d
-Starting libre-event-editor-table-panel_postgres_1
-Starting libre-event-editor-table-panel_postrest_1
-Starting libre-event-editor-table-panel_simulator_1
-Starting libre-event-editor-table-panel_grafana_1
+~/Libre-Event-Editor-Table-Panel
+$ docker-compose -f docker-compose.dev.yaml up -d
+Creating network "libre-event-editor-table-panel_default" with the default driver
+Creating libre-event-editor-table-panel_postgres_1 ... done
+Creating libre-event-editor-table-panel_influx_1   ... done
+Creating libre-event-editor-table-panel_postrest_1 ... done
+Creating libre-event-editor-table-panel_grafana_1   ... done
+Creating libre-event-editor-table-panel_simulator_1 ... done
+
 ```
 
 Run grunt watch to recompile on change
 
 ```shell
-~/libre-event-editor-table-panel
+~/Libre-Event-Editor-Table-Panel
 $ grunt watch
 Running "watch" task
 Waiting...
@@ -214,19 +222,19 @@ Prerequisites
 Build panel and zip into archive
 
 ```shell
-~/libre-event-editor-table-panel
+~/Libre-Event-Editor-Table-Panel
 $ grunt build
 Running "clean:0" (clean) task
 >> 1 path cleaned.
 
 Running "clean:1" (clean) task
->> 1 path cleaned.
+>> 0 paths cleaned.
 
 Running "copy:src_to_dist" (copy) task
 Created 3 directories, copied 9 files
 
 Running "copy:libs" (copy) task
-
+Copied 1 file
 
 Running "copy:readme" (copy) task
 Created 1 directory, copied 8 files
@@ -241,9 +249,10 @@ Copied 1 file
 Running "babel:dist" (babel) task
 
 Running "compress:main" (compress) task
->> Compressed 44 files.
+>> Compressed 50 files.
 
 Done, without errors.
+
 ```
 
 Find a completed build of this panel in the root directory named `libre-event-editor-table-panel.zip`.
@@ -257,5 +266,9 @@ For any issue, there are fundamentally three ways an individual can contribute:
 - By helping to resolve the issue: Typically, this is done either in the form of demonstrating that the issue reported is not a problem after all, or more often, by opening a Pull Request that changes some bit of something in the panel in a concrete and reviewable manner.
 
 ## Change log
+
+- 1.0.1 Documentation Update
+  - Fix subtitle & project path
+  - Remove unused grunt config
 
 - 1.0.0 Initial Public Release
